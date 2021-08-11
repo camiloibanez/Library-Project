@@ -18,13 +18,13 @@
 			<br>
 			
 			<div class="form-check">
-			  <input class="form-check-input" type="radio" name="clientType" id="patron" value="patron" required>
+			  <input class="form-check-input" type="radio" name="isLibrarian" id="patron" value="false" required>
 			  <label class="form-check-label" for="patron">
 			    Patron
 			  </label>
 			</div>
 			<div class="form-check">
-			  <input class="form-check-input" type="radio" name="clientType" id="librarian" value="librarian">
+			  <input class="form-check-input" type="radio" name="isLibrarian" id="librarian" value="true">
 			  <label class="form-check-label" for="librarian">
 			    Librarian
 			  </label>

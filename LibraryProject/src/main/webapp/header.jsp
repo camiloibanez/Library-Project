@@ -23,14 +23,14 @@
 		    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 		      <div class="navbar-nav">
 		        
-		        <c:if test="${ librarian }">
+		        <c:if test="${ isLibrarian }">
 		        	<a class="nav-link" href="#">Dashboard</a>
 			        <a class="nav-link" href="#">Accounts</a>
 			        <a class="nav-link" href="#">Library Books</a>
 		        	<a class="nav-link" aria-current="page" href="#">Logout</a>
 		        </c:if>
 		        
-		        <c:if test="${ patron }">
+		        <c:if test="${ !isLibrarian }">
 		        	<a class="nav-link" href="#">Dashboard</a>
 			        <a class="nav-link" href="#">Book History</a>
 			        <a class="nav-link" href="#">Library Books</a>

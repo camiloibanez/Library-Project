@@ -6,18 +6,18 @@
 	<h1>Update Account</h1>	
 	
 	<c:if test="${ !isLibrarian }">
-		<form action="updateAccount" method="post" >
+		<form action="adduser" method="post" >
 		
-			<input type="hidden" name="id" value="<c:out value='${ account.id }'/>">
+			<input type="hidden" name="id" value="<c:out value='${ account.patron_id }'/>">
 					
 			<div class="form-group">
 				<label for="firstName" class="form-label">First Name</label> 
-				<input type="text" id="firstName" name = "firstName" class="form-control" value="<c:out value='${ account.firstName }' />" required>
+				<input type="text" id="firstName" name = "firstName" class="form-control" value="<c:out value='${ account.first_name }' />" required>
 			</div>
 			
 			<div class="form-group">
 				<label for="lastName" class="form-label">Last Name</label> 
-				<input type="text" id="lastName" name = "lastName" class="form-control" value="<c:out value='${ account.lastName }' />" required>
+				<input type="text" id="lastName" name = "lastName" class="form-control" value="<c:out value='${ account.last_name }' />" required>
 			</div>
 				
 			<div class="form-group">
@@ -41,7 +41,7 @@
 	<c:if test="${ isLibrarian }">
 		<form action="updateAccount" method="post" >
 		
-			<input type="hidden" name="id" value="<c:out value='${ account.id }'/>">
+			<input type="hidden" name="id" value="<c:out value='${ account.librarian_id }'/>">
 									
 			<div class="form-group">
 				<label for="username" class="form-label">Username</label> 

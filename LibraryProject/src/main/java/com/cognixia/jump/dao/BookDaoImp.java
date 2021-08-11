@@ -117,6 +117,8 @@ public class BookDaoImp implements BookDao{
 		}		
 		return false;
 	}
+	
+	@Override
 	public boolean rentBook(int isbn) {
 		try (PreparedStatement pstmt = conn.prepareStatement(RENT_BOOK)) {
 
@@ -132,6 +134,8 @@ public class BookDaoImp implements BookDao{
 		}		
 		return false;
 	}
+	
+	@Override
 	public boolean returnBook(int isbn) {
 		try (PreparedStatement pstmt = conn.prepareStatement(RENT_BOOK)) {
 

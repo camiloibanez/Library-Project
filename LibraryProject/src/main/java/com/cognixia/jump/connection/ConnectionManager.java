@@ -35,7 +35,7 @@ public class ConnectionManager {
 	// propagate the exception because the user doesn't need to know the details, just need to know that the connection couldn't
 	// be made
 	public static Connection getConnection() {
-
+		
 		try {
 			if (connection == null) {
 				makeConnection();
@@ -43,7 +43,7 @@ public class ConnectionManager {
 		} catch (IOException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
-
+		
 		return connection;
 	}
 	

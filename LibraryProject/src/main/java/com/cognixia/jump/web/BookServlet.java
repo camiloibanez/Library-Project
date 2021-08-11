@@ -26,10 +26,9 @@ public class BookServlet extends HttpServlet {
 		
 		try {
 			ConnectionManager.getConnection().close();
-		} catch (SQLException e) {
+		} catch (SQLException | ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
-	
 		
 	}
 

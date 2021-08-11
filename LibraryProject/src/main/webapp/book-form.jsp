@@ -4,8 +4,8 @@
 <div class="container">
 
 	<c:if test="${ isLibrarian }">
-		<% String formType = "update"; %>
 	
+		<% String formType = "update"; %>
 	
 		<c:if test="${ book != null }">
 		
@@ -61,7 +61,7 @@
 		  
 		  <button type="submit" 
 		  		  class="btn btn-primary"
-		  		  style="margin:10px">Submit</button>
+		  		  style="margin:10px 0px">Submit</button>
 		  
 		</form>
 	

@@ -71,8 +71,8 @@ public class BookDaoImp implements BookDao{
 			pstmt.setInt(1, book.getIsbn());
 			pstmt.setString(2, book.getTitle());
 			pstmt.setString(3, book.getDescr());
-			
-			pstmt.setDate(4, book.getAdded_to_library());
+			pstmt.setBoolean(4, book.isRented());
+			pstmt.setDate(5, book.getAdded_to_library());
 			
 			// at least one row added
 			if(pstmt.executeUpdate() > 0) {
@@ -86,13 +86,66 @@ public class BookDaoImp implements BookDao{
 	@Override
 	public boolean deleteBook(int id) {
 
+		try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BOOK)) {
+
+			pstmt.setInt(1, id);
+			// at least one row deleted
+			if (pstmt.executeUpdate() > 0) {
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		
 		return false;
 	}
 	@Override
 	public boolean updateBook(Book book) {
+		try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_BOOK)) {
 
+			pstmt.setString(1, book.getTitle());
+			pstmt.setString(2, book.getDescr());
+			
+			pstmt.setInt(3, book.getIsbn());
+
+			// at least one row updated
+			if (pstmt.executeUpdate() > 0) {
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
 		return false;
 	}
+	public boolean rentBook(Book book) {
+		try (PreparedStatement pstmt = conn.prepareStatement(RENT_BOOK)) {
 
+			pstmt.setBoolean(1, true);		
+			pstmt.setInt(2, book.getIsbn());
+
+			// at least one row updated
+			if (pstmt.executeUpdate() > 0) {
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return false;
+	}
+	public boolean returnBook(Book book) {
+		try (PreparedStatement pstmt = conn.prepareStatement(RENT_BOOK)) {
+
+			pstmt.setBoolean(1, false);		
+			pstmt.setInt(2, book.getIsbn());
+
+			// at least one row updated
+			if (pstmt.executeUpdate() > 0) {
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return false;
+	}
 	
 }

@@ -13,4 +13,8 @@ public interface BookDao {
 	public boolean deleteBook(int id);
 	
 	public boolean updateBook(Book book);
+	
+	public boolean rentBook(int isbn);
+	
+	public boolean returnBook(int isbn);
 }

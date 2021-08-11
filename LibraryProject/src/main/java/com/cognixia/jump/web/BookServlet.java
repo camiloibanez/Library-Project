@@ -60,14 +60,17 @@ public class BookServlet extends HttpServlet {
 				break;
 			case "/checkout":
 				// checkouts a book
+				checkoutBook(request, response);
 				break;
 			case "/return":
 				// returns a book
+				returnBook(request, response);
 				break;
 			
 			// --- LIBRARIAN ONLY
 			case "/newbook":
 				// add a new book
+				goToNewBookForm(request, response);
 				break;
 			case "/addbook":
 				// make update to db for books
@@ -96,10 +99,10 @@ public class BookServlet extends HttpServlet {
 		// grab values needed to verify user credentials
 		String username = request.getParameter("username");
 		String pw = request.getParameter("pw");
-		boolean isLibrarian = Boolean.parseBoolean(request.getParameter("isLibarian"));
+		librarian = Boolean.parseBoolean(request.getParameter("isLibarian"));
 		
 		// check if credentials were valid
-		boolean isUser;	// = libraryDao.verifyUser(username, pw, isLibrarian);
+		
 		
 		// if valid user (patron/librarian)
 		//if (isUser) {
@@ -130,10 +133,42 @@ public class BookServlet extends HttpServlet {
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
 		
 		// updated it in the db so that it's rented
+		if (bookDao.rentBook(isbn)) {
+			// some sort of success message
+		}
+		else {
+			// some sort of error message
+		}
 		
 		
-		// refresh the page/list
+		// refresh the page/list -> either return to library book list or go to user history
 	}
+	
+	private void returnBook(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		// retrieve isbn for select book
+		int isbn = Integer.parseInt(request.getParameter("isbn"));
+		
+		// update book so that it has been returned
+		if (bookDao.returnBook(isbn)) {
+			// success message
+		}
+		else {
+			// error message
+		}
+		
+		// refresh page
+	}
+	
+	private void goToNewBookForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		// passes along whether the user is a librarian or not
+		request.setAttribute("isLibrarian", librarian);
+		
+		// re-direct to the book form
+		forwardDispatcher(request, response, "book-form.jsp");
+	}
+	
 	
 	// helper function
 	private void forwardDispatcher(HttpServletRequest request, HttpServletResponse response, String jsp) throws ServletException, IOException {

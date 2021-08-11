@@ -34,10 +34,14 @@ public class ConnectionManager {
 	// used to grab connection
 	// propagate the exception because the user doesn't need to know the details, just need to know that the connection couldn't
 	// be made
-	public static Connection getConnection() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
+	public static Connection getConnection() {
 		
-		if (connection == null) {
-			makeConnection();
+		try {
+			if (connection == null) {
+				makeConnection();
+			}
+		} catch (IOException | ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
 		}
 		
 		return connection;

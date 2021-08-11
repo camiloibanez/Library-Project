@@ -47,11 +47,11 @@
 						
 						<td>
 							
-							<a href="edit?id=<c:out value='${ book.isbn }' />">
+							<a href="edit?isbn=<c:out value='${ book.isbn }' />">
 								<button class="btn btn-primary">Edit</button>
 							</a>
 							
-							<a href="delete?id=<c:out value='${ book.isbn }' />">
+							<a href="delete?isbn=<c:out value='${ book.isbn }' />">
 								<button class="btn btn-danger">Delete</button>
 							</a>
 							
@@ -101,7 +101,7 @@
 						<c:if test="${ !book.rented }">
 							<td>
 			
-								<a href="checkout?id=<c:out value='${ book.isbn }' />">
+								<a href="checkout?isbn=<c:out value='${ book.isbn }' />">
 									<button class="btn btn-primary">Checkout</button>
 								</a>
 				
@@ -111,7 +111,7 @@
 						<c:if test="${ book.rented }">
 							<td>
 			
-								<a href="checkout?id=<c:out value='${ book.isbn }' />">
+								<a href="checkout?isbn=<c:out value='${ book.isbn }' />">
 									<button class="btn btn-primary" disabled>Checkout</button>
 								</a>
 				

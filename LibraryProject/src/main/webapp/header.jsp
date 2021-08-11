@@ -27,15 +27,22 @@
 		        	<a class="nav-link" href="#">Dashboard</a>
 			        <a class="nav-link" href="#">Accounts</a>
 			        <a class="nav-link" href="#">Library Books</a>
-		        	<a class="nav-link" aria-current="page" href="#">Logout</a>
+			        <a class="nav-link" href="#">Profile</a>
+		        	<a class="nav-link" href="#">Logout</a>
 		        </c:if>
 		        
 		        <c:if test="${ !isLibrarian }">
 		        	<a class="nav-link" href="#">Dashboard</a>
 			        <a class="nav-link" href="#">Book History</a>
 			        <a class="nav-link" href="#">Library Books</a>
-		        	<a class="nav-link" aria-current="page" href="#">Logout</a>
+			        <a class="nav-link" href="#">Profile</a>
+		        	<a class="nav-link" href="#">Logout</a>
 		        </c:if>
+		        
+		        <c:if test="${ !loggedIn }">
+		        	<a class="nav-link" href="#">Create Account</a>
+		        </c:if>
+		        
 		        
 		      </div>
 		    </div>

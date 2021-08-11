@@ -34,7 +34,7 @@
 						</td>
 						
 						<td>
-							<c:out value="${ book.description }" />
+							<c:out value="${ book.descr }" />
 						</td>
 						
 						<td>
@@ -42,7 +42,7 @@
 						</td>
 						
 						<td>
-							<c:out value="${ book.date_added }" />
+							<c:out value="${ book.added_to_library }" />
 						</td>
 						
 						<td>
@@ -91,7 +91,7 @@
 						</td>
 						
 						<td>
-							<c:out value="${ book.description }" />
+							<c:out value="${ book.descr }" />
 						</td>
 						
 						<td>

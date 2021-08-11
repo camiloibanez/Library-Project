@@ -16,7 +16,7 @@
 		
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		  <div class="container-fluid">
-		    <a class="navbar-brand" href="#">Library</a>
+		    <a class="navbar-brand" href="<%= request.getContextPath() %>/dashboard">Library</a>
 		    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 		      <span class="navbar-toggler-icon"></span>
 		    </button>
@@ -26,25 +26,23 @@
 		        <c:if test="${ loggedIn }">
 		        
 			        <c:if test="${ isLibrarian }">
-			        	<a class="nav-link" href="#">Dashboard</a>
 				        <a class="nav-link" href="#">Accounts</a>
-				        <a class="nav-link" href="#">Library Books</a>
-				        <a class="nav-link" href="#">Profile</a>
-			        	<a class="nav-link" href="#">Logout</a>
+				        <a class="nav-link" href="<%= request.getContextPath() %>/booklist">Library Books</a>
+				        <a class="nav-link" href="<%= request.getContextPath() %>/adduser">Profile</a>
+			        	<a class="nav-link" href="<%= request.getContextPath() %>/">Logout</a>
 			        </c:if>
 			        
 			        <c:if test="${ !isLibrarian }">
-			        	<a class="nav-link" href="#">Dashboard</a>
-				        <a class="nav-link" href="#">Book History</a>
-				        <a class="nav-link" href="#">Library Books</a>
-				        <a class="nav-link" href="#">Profile</a>
-			        	<a class="nav-link" href="#">Logout</a>
+				        <a class="nav-link" href="<%= request.getContextPath() %>/history">Book History</a>
+				        <a class="nav-link" href="<%= request.getContextPath() %>/booklist">Library Books</a>
+				        <a class="nav-link" href="<%= request.getContextPath() %>/adduser">Profile</a>
+			        	<a class="nav-link" href="<%= request.getContextPath() %>/">Logout</a>
 			        </c:if>
 			        
 		        </c:if>
 		        
 		        <c:if test="${ !loggedIn }">
-		        	<a class="nav-link" href="#">Create Account</a>
+		        	<a class="nav-link" href="<%= request.getContextPath() %>/signup">Create Account</a>
 		        </c:if>
 		        
 		        

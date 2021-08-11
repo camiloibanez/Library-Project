@@ -2,3 +2,5 @@
 config.properties
 LibraryProject/resources/config.properties
 Servers
+MANIFEST.MF
+pom.properties

@@ -99,7 +99,8 @@ public class BookServlet extends HttpServlet {
 		// grab values needed to verify user credentials
 		String username = request.getParameter("username");
 		String pw = request.getParameter("pw");
-		librarian = Boolean.parseBoolean(request.getParameter("isLibarian"));
+
+		librarian = Boolean.parseBoolean(request.getParameter("isLibrarian"));
 		
 		// check if credentials were valid
 		

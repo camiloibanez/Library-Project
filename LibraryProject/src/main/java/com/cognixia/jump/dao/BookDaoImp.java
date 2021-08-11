@@ -117,11 +117,13 @@ public class BookDaoImp implements BookDao{
 		}		
 		return false;
 	}
-	public boolean rentBook(Book book) {
+	
+	@Override
+	public boolean rentBook(int isbn) {
 		try (PreparedStatement pstmt = conn.prepareStatement(RENT_BOOK)) {
 
 			pstmt.setBoolean(1, true);		
-			pstmt.setInt(2, book.getIsbn());
+			pstmt.setInt(2, isbn);
 
 			// at least one row updated
 			if (pstmt.executeUpdate() > 0) {
@@ -132,11 +134,13 @@ public class BookDaoImp implements BookDao{
 		}		
 		return false;
 	}
-	public boolean returnBook(Book book) {
+	
+	@Override
+	public boolean returnBook(int isbn) {
 		try (PreparedStatement pstmt = conn.prepareStatement(RENT_BOOK)) {
 
 			pstmt.setBoolean(1, false);		
-			pstmt.setInt(2, book.getIsbn());
+			pstmt.setInt(2, isbn);
 
 			// at least one row updated
 			if (pstmt.executeUpdate() > 0) {
@@ -147,5 +151,6 @@ public class BookDaoImp implements BookDao{
 		}		
 		return false;
 	}
+	
 	
 }

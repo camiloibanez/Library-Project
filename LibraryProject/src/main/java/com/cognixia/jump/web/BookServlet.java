@@ -82,14 +82,17 @@ public class BookServlet extends HttpServlet {
 				break;
 			case "/checkout":
 				// checkouts a book
+				checkoutBook(request, response);
 				break;
 			case "/return":
 				// returns a book
+				returnBook(request, response);
 				break;
 			
 			// --- LIBRARIAN ONLY
 			case "/newbook":
 				// add a new book
+				goToNewBookForm(request, response);
 				break;
 			case "/addbook":
 				// make update to db for books
@@ -180,7 +183,7 @@ public class BookServlet extends HttpServlet {
 				response.sendRedirect("/");
 			}
 			
-		}
+		// }
 		
 	}
 	
@@ -220,9 +223,15 @@ public class BookServlet extends HttpServlet {
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
 		
 		// updated it in the db so that it's rented
-		
+		if (bookDao.rentBook(isbn)) {
+			// success message
+		}
+		else {
+			// error message
+		}
 		
 		// refresh the page/list
+		response.sendRedirect("booklist");
 	}
 	
 
@@ -240,13 +249,10 @@ public class BookServlet extends HttpServlet {
 		}
 		
 		// refresh page
+		response.sendRedirect("history");
 	}
 	
 	private void goToNewBookForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		// passes along whether the user is a librarian or not
-		// TODO NOW: Figure out how to do this through a session variable
-		request.setAttribute("isLibrarian", isLibrarian);
 		
 		// re-direct to the book form
 		forwardDispatcher(request, response, "book-form.jsp");
@@ -308,7 +314,6 @@ public class BookServlet extends HttpServlet {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(jsp);
 		dispatcher.forward(request, response);
 	}
-
 
 
 }

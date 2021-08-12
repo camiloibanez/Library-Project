@@ -18,7 +18,7 @@
 		
 		<tbody>
 		
-			<c:forEach var="book" items="${ allBooksRented }">
+			<c:forEach var="book" items="${ userHistory }">
 				
 				<tr>
 					<td>
@@ -30,11 +30,11 @@
 					</td>
 					
 					<td>
-						<c:out value="${ book.description }" />
+						<c:out value="${ book.descr }" />
 					</td>
 					
 					<td>
-						<c:if test="${ rented }">
+						<c:if test="${ book.rented }">
 							<a href="return?isbn=<c:out value='${ book.isbn }' />">
 								<button class="btn btn-primary">Return</button>
 							</a>

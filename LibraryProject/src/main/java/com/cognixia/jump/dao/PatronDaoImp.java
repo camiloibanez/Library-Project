@@ -51,7 +51,6 @@ public class PatronDaoImp implements PatronDao{
 				int id = rs.getInt("patron_id");
 				String fname = rs.getString("first_name");
 				String lname = rs.getString("last_name");
-
 				String pw = rs.getString("password");
 				boolean frozen = rs.getBoolean("account_frozen");
 				patron = new Patron(id, fname, lname, username, pw, frozen);

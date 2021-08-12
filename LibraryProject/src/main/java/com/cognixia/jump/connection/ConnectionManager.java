@@ -3,6 +3,7 @@ package com.cognixia.jump.connection;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -10,6 +11,10 @@ import java.util.Properties;
 
 public class ConnectionManager {
 
+	private static final String url = "jdbc:mysql://localhost:3306/library";
+	private static final String username = "root";
+	private static final String password = "root";
+	
 	// connection is null at the start
 	private static Connection connection;
 	
@@ -17,12 +22,17 @@ public class ConnectionManager {
 	private static void makeConnection() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
 		
 		// load in credentials from a properties file
-		Properties properties = new Properties();
+//		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 		
-		properties.load(new FileInputStream("resources/config.properties"));
-		String url = properties.getProperty("url");
-		String username = properties.getProperty("username");
-		String password = properties.getProperty("password");
+//		InputStream input = classloader.getResourceAsStream("resources/config.properties");
+		
+		
+//		Properties properties = new Properties();
+//		
+//		properties.load(new FileInputStream("resources/config.properties"));
+//		String url = properties.getProperty("url");
+//		String username = properties.getProperty("username");
+//		String password = properties.getProperty("password");
 		
 		// register the driver
 		Class.forName("com.mysql.cj.jdbc.Driver");

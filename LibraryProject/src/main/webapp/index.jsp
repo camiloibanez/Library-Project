@@ -4,7 +4,7 @@
 	<h1 class="display-4">Login Page</h1>
 	<p class="lead">Welcome! Please login below.</p>
 	
-	<form action="signin" method="post">
+	<form action="LoginServlet" method="post">
 		
 			<div class="form-group">
 				<label for="username" class="form-label">Username</label> 

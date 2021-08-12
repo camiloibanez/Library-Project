@@ -7,17 +7,17 @@ public class Patron {
 	private String last_name;
 	private String username;
 	private String password;
-	private boolean account_frozon;
+	private boolean account_frozen;
 	
 	public Patron(int patron_id, String first_name, String last_name, String username, String password,
-			boolean account_frozon) {
+			boolean account_frozen) {
 		super();
 		this.patron_id = patron_id;
 		this.first_name = first_name;
 		this.last_name = last_name;
 		this.username = username;
 		this.password = password;
-		this.account_frozon = account_frozon;
+		this.account_frozen = account_frozen;
 	}
 
 	public int getPatron_id() {
@@ -50,17 +50,17 @@ public class Patron {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public boolean isAccount_frozon() {
-		return account_frozon;
+	public boolean isAccount_frozen() {
+		return account_frozen;
 	}
-	public void setAccount_frozon(boolean account_frozon) {
-		this.account_frozon = account_frozon;
+	public void setAccount_frozen(boolean account_frozen) {
+		this.account_frozen = account_frozen;
 	}
 
 	@Override
 	public String toString() {
 		return "Patron [patron_id=" + patron_id + ", first_name=" + first_name + ", last_name=" + last_name
-				+ ", username=" + username + ", password=" + password + ", account_frozon=" + account_frozon + "]";
+				+ ", username=" + username + ", password=" + password + ", account_frozen=" + account_frozen + "]";
 	}
 	
 

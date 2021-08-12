@@ -13,6 +13,8 @@ public class Book {
 	private Date checkedout;
 	private Date due_date;
 	private Date returned;
+	private int checkout_id;
+	
 	
 
 	public Book(int isbn, String title, String descr, boolean rented, Date added_to_library) {
@@ -24,12 +26,13 @@ public class Book {
 		this.added_to_library = added_to_library;
 	}
 	
-	public Book(int isbn, String title, String descr, boolean rented, Date checkedout, Date due_date, Date returned) {
+	public Book(int isbn, int checkout_id, String title, String descr, boolean rented, Date checkedout, Date due_date, Date returned) {
 		this.isbn = isbn;
+		this.setCheckout_id(checkout_id);
 		this.title = title;
 		this.descr = descr;
 		this.rented = rented;
-		this.setCheckedout(checkedout);
+		this.checkedout = checkedout;
 		this.due_date = due_date;
 		this.returned = returned;
 	}
@@ -95,6 +98,14 @@ public class Book {
 		return "Book [isbn=" + isbn + ", title=" + title + ", descr=" + descr + ", rented=" + rented
 				+ ", added_to_library=" + added_to_library + ", checkedout=" + checkedout + ", due_date=" + due_date
 				+ ", returned=" + returned + "]";
+	}
+
+	public int getCheckout_id() {
+		return checkout_id;
+	}
+
+	public void setCheckout_id(int checkout_id) {
+		this.checkout_id = checkout_id;
 	}
 
 }

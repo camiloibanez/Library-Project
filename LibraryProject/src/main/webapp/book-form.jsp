@@ -5,7 +5,7 @@
 
 	<c:if test="${ isLibrarian }">
 	
-		<% String formType = "update"; %>
+		<% String formType = "updatebook"; %>
 	
 		<c:if test="${ book != null }">
 		
@@ -17,7 +17,7 @@
 			
 			<h1>Add New Book</h1>
 			
-			<% formType = "add"; %>
+			<% formType = "addbook"; %>
 			
 		</c:if>
 		
@@ -27,7 +27,7 @@
 			
 				<input type="hidden" name="isbn" value="<c:out value='${ book.isbn }' />">
 				<input type="hidden" name="rented" value="<c:out value='${ book.rented }' />">
-				<input type="hidden" name="date_added" value="<c:out value='${ book.date_added }' />">
+				<input type="hidden" name="date_added" value="<c:out value='${ book.added_to_library }' />">
 			
 			</c:if>
 			
@@ -53,9 +53,7 @@
 		  <div class="form-group">
 		  
 		    <label for="description" class="form-label">Description</label>
-		    <textarea class="form-control" id="description" name="description" rows="3" required>
-		    	<c:out value="${ book.description }" />
-		    </textarea>
+		    <textarea class="form-control" id="description" name="description" rows="3" required><c:out value="${ book.descr }" /></textarea>
 		    
 		  </div>
 		  

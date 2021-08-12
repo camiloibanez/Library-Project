@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.cognixia.jump.connection.ConnectionManager;
 import com.cognixia.jump.model.Patron;
 
@@ -14,6 +17,7 @@ public class PatronDaoImp implements PatronDao{
 	private static String SELECT_PATRON_BY_CREDENTIALS = "select * from patron where username = ? and password = ?";
 	private static String INSERT_PATRON = "insert into patron(first_name, last_name, username, password, account_frozon) values(?, ?, ?, ?, ?)";
 	private static String UPDATE_PATRON = "update patron set first_name = ?, last_name = ?, username = ?, password = ? where patron_id = ?";
+	private static String LIST_PATRONS = "select * from patron";
 
 
 	@Override
@@ -107,4 +111,31 @@ public class PatronDaoImp implements PatronDao{
 		return false;
 	}
 	
+	@Override
+	public List<Patron> listPatrons() {
+		
+		List<Patron> patrons = new ArrayList<Patron>();
+		
+		try (PreparedStatement pstmt = conn.prepareStatement(LIST_PATRONS)) {
+			
+			ResultSet rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				int id = rs.getInt("patron_id");
+				String fname = rs.getString("first_name");
+				String lname = rs.getString("last_name");
+				String username = rs.getString("username");
+				String password = rs.getString("password");
+				boolean frozen = rs.getBoolean("account_frozen");
+				Patron patron = new Patron(id, fname, lname, username, password, frozen);
+				
+				patrons.add(patron);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return patrons;
+	}
 }

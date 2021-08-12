@@ -6,8 +6,6 @@
 	<br>
 	<br>
 	<table class="table table-striped">
-	
-		<c:if test="${ isLibrarian }">
 		
 			<thead>
 				<tr>
@@ -15,7 +13,9 @@
 					<th>Title</th>
 					<th>Description</th>
 					<th>Rented</th>
-					<th>Date Added</th>
+					<c:if test="${ isLibrarian }">
+						<th>Date Added</th>
+					</c:if>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -41,81 +41,42 @@
 							<c:out value="${ book.rented }" />
 						</td>
 						
-						<td>
-							<c:out value="${ book.added_to_library }" />
-						</td>
-						
-						<td>
-							
-							<a href="edit?isbn=<c:out value='${ book.isbn }' />">
-								<button class="btn btn-primary">Edit</button>
-							</a>
-							
-							<a href="delete?isbn=<c:out value='${ book.isbn }' />">
-								<button class="btn btn-danger">Delete</button>
-							</a>
-							
-						</td>
-						
-					</tr>
-				
-				</c:forEach>
-			
-			</tbody>
-		
-		</c:if>
-		
-		<c:if test="${ !isLibrarian }">
-		
-			<thead>
-				<tr>
-					<th>isbn</th>
-					<th>Title</th>
-					<th>Description</th>
-					<th>Rented</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			
-			<tbody>
-			
-				<c:forEach var="book" items="${ allBooks }">
-					
-					<tr>
-						<td>
-							<c:out value="${ book.isbn }" />
-						</td>
-						
-						<td>
-							<c:out value="${ book.title }" />
-						</td>
-						
-						<td>
-							<c:out value="${ book.descr }" />
-						</td>
-						
-						<td>
-							<c:out value="${ book.rented }" />
-						</td>					
-						
-						<c:if test="${ !book.rented }">
+						<c:if test="${ isLibrarian }">
 							<td>
-			
-								<a href="checkout?isbn=<c:out value='${ book.isbn }' />">
-									<button class="btn btn-primary">Checkout</button>
+								<c:out value="${ book.added_to_library }" />
+							</td>
+						
+							<td>
+								
+								<a href="editbook?isbn=<c:out value='${ book.isbn }' />">
+									<button class="btn btn-primary">Edit</button>
 								</a>
-				
+															
 							</td>
 						</c:if>
 						
-						<c:if test="${ book.rented }">
-							<td>
-			
-								<a href="checkout?isbn=<c:out value='${ book.isbn }' />">
-									<button class="btn btn-primary" disabled>Checkout</button>
-								</a>
+						<c:if test="${ !isLibrarian }">
+		
+							<c:if test="${ !book.rented }">
+								<td>
 				
-							</td>
+									<a href="checkout?isbn=<c:out value='${ book.isbn }' />">
+										<button class="btn btn-primary">Checkout</button>
+									</a>
+					
+								</td>
+							</c:if>
+							
+							<c:if test="${ book.rented }">
+								<td>
+				
+									<a href="checkout?isbn=<c:out value='${ book.isbn }' />">
+										<button class="btn btn-primary" disabled>Checkout</button>
+									</a>
+					
+								</td>
+							</c:if>
+										
 						</c:if>
 						
 					</tr>
@@ -123,13 +84,9 @@
 				</c:forEach>
 			
 			</tbody>
-			
-		</c:if>
-					
-	</table>
-	
-	
-
+		
+		</table>
+		
 </div>
 
 

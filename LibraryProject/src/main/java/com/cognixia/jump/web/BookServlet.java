@@ -115,8 +115,10 @@ public class BookServlet extends HttpServlet {
 				// make update to db for patron
 				break;
 			case "/accounts":
+				listAccounts(request, response);
 				break;
 			case "/logout":
+				logOut(request, response);
 				break;
 			default:
 				// redirect to home page
@@ -153,7 +155,7 @@ public class BookServlet extends HttpServlet {
 
 			} else {
 				System.out.println("Incorrect username and password");
-				response.sendRedirect("/");
+				response.sendRedirect("/LibraryProject/");
 			}
 			
 		} else {
@@ -180,10 +182,10 @@ public class BookServlet extends HttpServlet {
 			
 			} else {
 				System.out.println("Incorrect username and password");
-				response.sendRedirect("/");
+				response.sendRedirect("/LibraryProject/");
 			}
 			
-		// }
+		 }
 		
 	}
 	
@@ -280,7 +282,7 @@ public class BookServlet extends HttpServlet {
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
 		
 		Book book = bookDao.getBookById(isbn);
-		
+		System.out.println(book);
 		request.setAttribute("book", book);
 		
 		forwardDispatcher(request, response, "book-form.jsp");
@@ -308,6 +310,22 @@ public class BookServlet extends HttpServlet {
 		
 	}
 	
+	public void listAccounts(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		List<Patron> allPatrons = patronDao.listPatrons();
+		
+		request.setAttribute("allPatrons", allPatrons);
+		
+		forwardDispatcher(request, response, "account-list.jsp");
+	}
+	
+	private void logOut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		session.invalidate();
+		
+		response.sendRedirect("/LibraryProject/");
+
+	}
 	
 	// helper function
 	private void forwardDispatcher(HttpServletRequest request, HttpServletResponse response, String jsp) throws ServletException, IOException {

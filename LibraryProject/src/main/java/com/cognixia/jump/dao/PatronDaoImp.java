@@ -11,13 +11,8 @@ public class PatronDaoImp implements PatronDao{
 
 	public static final Connection conn = ConnectionManager.getConnection();	
 	private static String SELECT_PATRON_BY_ID = "select * from patron where patron_id = ?";
-<<<<<<< HEAD
 	private static String SELECT_PATRON_BY_CREDENTIALS = "select * from patron where username = ? and password = ?";
 	private static String INSERT_PATRON = "insert into patron(first_name, last_name, username, password, account_frozon) values(?, ?, ?, ?, ?)";
-=======
-	private static String SELECT_PATRON_BY_NAME = "select * from patron where username = ?";
-	private static String INSERT_PATRON = "insert into patron(first_name, last_name, username, password, account_frozen) values(?, ?, ?, ?, ?)";
->>>>>>> main
 	private static String UPDATE_PATRON = "update patron set first_name = ?, last_name = ?, username = ?, password = ? where patron_id = ?";
 
 
@@ -56,15 +51,11 @@ public class PatronDaoImp implements PatronDao{
 				int id = rs.getInt("patron_id");
 				String fname = rs.getString("first_name");
 				String lname = rs.getString("last_name");
-<<<<<<< HEAD
+
 				String pw = rs.getString("password");
-				boolean frozen = rs.getBoolean("account_frozon");
-				patron = new Patron(id, fname, lname, username, pw, frozen);
-=======
-				String password = rs.getString("password");
 				boolean frozen = rs.getBoolean("account_frozen");
-				patron = new Patron(id, fname, lname, username, password, frozen);
->>>>>>> main
+				patron = new Patron(id, fname, lname, username, pw, frozen);
+
 			}
 			
 			rs.close();

@@ -16,12 +16,16 @@ import javax.servlet.http.HttpSession;
 import com.cognixia.jump.connection.ConnectionManager;
 import com.cognixia.jump.dao.BookDao;
 import com.cognixia.jump.dao.BookDaoImp;
+import com.cognixia.jump.dao.LibrarianDao;
+import com.cognixia.jump.dao.PatronDao;
 import com.cognixia.jump.model.Book;
 
 public class BookServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private BookDao bookDao;
+	private LibrarianDao librarianDao;
+	private PatronDao patronDao;
 	
 	// TODO NOW: will have to store this in session
 	private boolean librarian;
@@ -65,14 +69,17 @@ public class BookServlet extends HttpServlet {
 				break;
 			case "/checkout":
 				// checkouts a book
+				checkoutBook(request, response);
 				break;
 			case "/return":
 				// returns a book
+				returnBook(request, response);
 				break;
 			
 			// --- LIBRARIAN ONLY
 			case "/newbook":
 				// add a new book
+				goToNewBookForm(request, response);
 				break;
 			case "/addbook":
 				// make update to db for books
@@ -113,9 +120,9 @@ public class BookServlet extends HttpServlet {
 		
 		// check if credentials were valid
 
-		if (librarian) {
+		// if (librarian) {
 			
-		}
+		// }
 		
 		
 		// if valid user (patron/librarian)
@@ -168,9 +175,15 @@ public class BookServlet extends HttpServlet {
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
 		
 		// updated it in the db so that it's rented
-		
+		if (bookDao.rentBook(isbn)) {
+			// success message
+		}
+		else {
+			// error message
+		}
 		
 		// refresh the page/list
+		response.sendRedirect("booklist");
 	}
 	
 
@@ -188,13 +201,10 @@ public class BookServlet extends HttpServlet {
 		}
 		
 		// refresh page
+		response.sendRedirect("history");
 	}
 	
 	private void goToNewBookForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		// passes along whether the user is a librarian or not
-		// TODO NOW: Figure out how to do this through a session variable
-		request.setAttribute("isLibrarian", librarian);
 		
 		// re-direct to the book form
 		forwardDispatcher(request, response, "book-form.jsp");

@@ -25,11 +25,11 @@
 					
 					<tr>
 						<td>
-							<c:out value="${ user.first_name }" />
+							<c:out value="${ user.firstName }" />
 						</td>
 						
 						<td>
-							<c:out value="${ user.last_name }" />
+							<c:out value="${ user.lastName }" />
 						</td>
 						
 						<td>
@@ -41,18 +41,18 @@
 						</td>
 						
 						<td>
-							<c:out value="${ user.account_frozen}" />
+							<c:out value="${ user.frozen}" />
 						</td>
 	
 						<td>
-							<c:if test="${ account_frozen }">
-								<a href="edit?id=<c:out value='${ user.patron_id }' />">
+							<c:if test="${ frozen }">
+								<a href="edit?id=<c:out value='${ user.id }' />">
 									<button class="btn btn-primary">Unfreeze</button>
 								</a>
 							</c:if>
 	
-							<c:if test="${ !account_frozen }">
-								<a href="edit?id=<c:out value='${ user.patron_id }' />">
+							<c:if test="${ !frozen }">
+								<a href="edit?id=<c:out value='${ user.id }' />">
 									<button class="btn btn-primary">Freeze</button>
 								</a>
 							</c:if>

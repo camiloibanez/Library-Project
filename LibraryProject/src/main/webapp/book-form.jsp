@@ -5,7 +5,7 @@
 
 	<c:if test="${ isLibrarian }">
 	
-		<% String formType = "updatebook"; %>
+		<% String formType = "update"; %>
 	
 		<c:if test="${ book != null }">
 		
@@ -17,7 +17,7 @@
 			
 			<h1>Add New Book</h1>
 			
-			<% formType = "addbook"; %>
+			<% formType = "add"; %>
 			
 		</c:if>
 		

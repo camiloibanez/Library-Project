@@ -30,7 +30,7 @@
 					</td>
 					
 					<td>
-						<c:out value="${ book.descr }" />
+						<c:out value="${ book.description }" />
 					</td>
 					
 					<td>

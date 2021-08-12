@@ -211,7 +211,7 @@ public class BookServlet extends HttpServlet {
 		request.setAttribute("allBooks", allBooks);
 		
 		// redirect to the JSP page and send data that was just pulled
-		forwardDispatcher(request, response, "book-list.jsp");
+		forwardDispatcher(request, response, "library-book-list.jsp");
 	}
 	
 	private void checkoutBook(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

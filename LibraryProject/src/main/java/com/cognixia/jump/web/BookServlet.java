@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,18 +17,29 @@ import javax.servlet.http.HttpSession;
 import com.cognixia.jump.connection.ConnectionManager;
 import com.cognixia.jump.dao.BookDao;
 import com.cognixia.jump.dao.BookDaoImp;
+import com.cognixia.jump.dao.LibrarianDao;
+import com.cognixia.jump.dao.LibrarianDaoImp;
+import com.cognixia.jump.dao.PatronDao;
+import com.cognixia.jump.dao.PatronDaoImp;
 import com.cognixia.jump.model.Book;
+import com.cognixia.jump.model.Librarian;
+import com.cognixia.jump.model.Patron;
 
+@WebServlet("/")
 public class BookServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private BookDao bookDao;
+	private LibrarianDao librarianDao;
+	private PatronDao patronDao;
 	
 	// TODO NOW: will have to store this in session
-	private boolean librarian;
+	private boolean isLibrarian;
 
 	public void init(ServletConfig config) throws ServletException {
 		bookDao = new BookDaoImp();
+		librarianDao = new LibrarianDaoImp();
+		patronDao = new PatronDaoImp();
 	}
 
 	public void destroy() {
@@ -53,6 +65,10 @@ public class BookServlet extends HttpServlet {
 		switch(action) {
 			case "/signin":
 				// attempt to sign in with credentials
+				signInUser(request, response);
+				break;
+			case "/dashboard":
+				forwardDispatcher(request, response, "dashboard.jsp");
 				break;
 			
 			case "/history":
@@ -94,7 +110,10 @@ public class BookServlet extends HttpServlet {
 			case "/adduser":
 				// make update to db for patron
 				break;
-				
+			case "/accounts":
+				break;
+			case "/logout":
+				break;
 			default:
 				// redirect to home page
 				response.sendRedirect("/");
@@ -105,32 +124,60 @@ public class BookServlet extends HttpServlet {
 	private void signInUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// grab values needed to verify user credentials
-		String username = request.getParameter("username");
-		String pw = request.getParameter("pw");
-		boolean isLibrarian = Boolean.parseBoolean(request.getParameter("isLibarian"));
+		String username = request.getParameter("username").trim();
+		String pw = request.getParameter("pw").trim();
+		isLibrarian = Boolean.parseBoolean(request.getParameter("isLibrarian"));
 		
-		// TODO: Make suggestion to create a User class that Patron and Librarian inherits from
+		HttpSession session = null;
 		
 		// check if credentials were valid
+		System.out.println(isLibrarian);
+		if (isLibrarian) {
+			
+			Librarian user = librarianDao.getLibrarianByCredentials(username, pw);
+			
+			if(user != null) {
+				session = request.getSession();
+				
+				// Save user information in session
+				session.setAttribute("username", username);
+				session.setAttribute("isLibrarian", isLibrarian);
+				session.setAttribute("isLoggedIn", true);
+				
+				// forward to 'dashboard.jsp'
+				forwardDispatcher(request, response, "dashboard.jsp");
 
-		if (librarian) {
+			} else {
+				System.out.println("Incorrect username and password");
+				response.sendRedirect("/");
+			}
+			
+		} else {
+			
+			Patron user = patronDao.getPatronByCredentials(username, pw);
+			
+			if(user != null) {
+				session = request.getSession();
+				
+				String first_name = user.getFirst_name();
+				String last_name = user.getLast_name();
+				
+				// Save user information in session
+				session.setAttribute("first_name", first_name);
+				session.setAttribute("last_name", last_name);
+				session.setAttribute("username", username);
+				session.setAttribute("isLibrarian", isLibrarian);
+				session.setAttribute("isLoggedIn", true);
+				
+				// forward to 'dashboard.jsp'
+				forwardDispatcher(request, response, "dashboard.jsp");
+			
+			} else {
+				System.out.println("Incorrect username and password");
+				response.sendRedirect("/");
+			}
 			
 		}
-		
-		
-		// if valid user (patron/librarian)
-		//if (isUser) {
-			// retrieve user information depending on user type
-			// add data to send
-			// forward to 'dashboard.jsp'
-		//}
-		
-		// Save user information in session
-		HttpSession session = request.getSession();
-		session.setAttribute("username", username);
-		session.setAttribute("librarian", librarian);
-		
-		
 		
 	}
 	
@@ -194,7 +241,7 @@ public class BookServlet extends HttpServlet {
 		
 		// passes along whether the user is a librarian or not
 		// TODO NOW: Figure out how to do this through a session variable
-		request.setAttribute("isLibrarian", librarian);
+		request.setAttribute("isLibrarian", isLibrarian);
 		
 		// re-direct to the book form
 		forwardDispatcher(request, response, "book-form.jsp");

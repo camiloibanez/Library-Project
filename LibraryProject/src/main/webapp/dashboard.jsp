@@ -2,7 +2,7 @@
 
 <div class="container">
 
-	<c:if test="${ isLibrarian }">
+	<c:if test='${ isLibrarian }'>
 	<h3> You are a librarian</h3>
 	</c:if>
 	

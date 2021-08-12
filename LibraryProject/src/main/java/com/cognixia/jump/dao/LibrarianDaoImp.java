@@ -11,7 +11,7 @@ public class LibrarianDaoImp implements LibrarianDao {
 
 	public static final Connection conn = ConnectionManager.getConnection();	
 	private static String SELECT_LIBRARIAN_BY_ID = "select * from librarian where librarian_id = ?";
-	private static String SELECT_LIBRARIAN_BY_NAME = "select * from librarian where username = ?";
+	private static String SELECT_LIBRARIAN_BY_CREDENTIALS = "select * from librarian where username = ? and password = ?";
 	private static String INSERT_LIBRARIAN = "insert into librarian(username, password) values(?, ?)";
 	private static String UPDATE_LIBRARIAN = "update librarian set username = ?, password = ? where librarian_id = ?";
 
@@ -37,18 +37,19 @@ public class LibrarianDaoImp implements LibrarianDao {
 		return librarian;
 	}
 	@Override
-	public Librarian getLibrarianByUsername(String username) {
+	public Librarian getLibrarianByCredentials(String username, String password) {
 		Librarian librarian = null;
 		
-		try(PreparedStatement pstmt = conn.prepareStatement(SELECT_LIBRARIAN_BY_NAME)) {
+		try(PreparedStatement pstmt = conn.prepareStatement(SELECT_LIBRARIAN_BY_CREDENTIALS)) {
 			
-			pstmt.setString(1, username);			
+			pstmt.setString(1, username);	
+			pstmt.setString(2, password);
 			ResultSet rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
 				int id = rs.getInt("librarian_id");
-				String password = rs.getString("password");
-				librarian = new Librarian(id, username, password);
+				String pw = rs.getString("password");
+				librarian = new Librarian(id, username, pw);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

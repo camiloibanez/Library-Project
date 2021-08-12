@@ -1,6 +1,7 @@
 package com.cognixia.jump.web;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.cognixia.jump.connection.ConnectionManager;
 import com.cognixia.jump.dao.BookDao;
@@ -20,6 +22,8 @@ public class BookServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private BookDao bookDao;
+	
+	// TODO NOW: will have to store this in session
 	private boolean librarian;
 
 	public void init(ServletConfig config) throws ServletException {
@@ -53,6 +57,7 @@ public class BookServlet extends HttpServlet {
 			
 			case "/history":
 				// user's history as well as currently checked out books
+				listUserHistory(request, response);
 				break;
 			case "/booklist":
 				// list books in the library
@@ -74,9 +79,15 @@ public class BookServlet extends HttpServlet {
 				break;
 			case "/addbook":
 				// make update to db for books
+				addNewBook(request, response);
+				break;
+			case "/editbook":
+				// edit book information
+				goToEditBookForm(request, response);
 				break;
 			case "/updatebook":
 				// update book information
+				updateBook(request, response);
 				break;
 			
 			// TODO LATER: Bonus features
@@ -102,7 +113,12 @@ public class BookServlet extends HttpServlet {
 
 		librarian = Boolean.parseBoolean(request.getParameter("isLibrarian"));
 		
+		// TODO: Make suggestion to create a User class that Patron and Librarian inherits from
+		
 		// check if credentials were valid
+//		if (librarian) {
+//			
+//		}
 		
 		
 		// if valid user (patron/librarian)
@@ -112,7 +128,28 @@ public class BookServlet extends HttpServlet {
 			// forward to 'dashboard.jsp'
 		//}
 		
+		// Save user information in session
+		HttpSession session = request.getSession();
+		session.setAttribute("username", username);
+		session.setAttribute("librarian", librarian);
 		
+		
+		
+	}
+	
+	private void listUserHistory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		// retrieve user data from session
+		int id = Integer.parseInt(request.getParameter("patron_id"));
+		
+		// retrieve user's book history
+		List<Book> userHistory = bookDao.getUserHistory(id);
+		
+		// add data that is going to be sent through
+		request.setAttribute("userHistory", userHistory);
+		
+		// redirect to JSP page
+		forwardDispatcher(request, response, "book-history-list.jsp");
 		
 	}
 	
@@ -164,10 +201,61 @@ public class BookServlet extends HttpServlet {
 	private void goToNewBookForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// passes along whether the user is a librarian or not
+		// TODO NOW: Figure out how to do this through a session variable
 		request.setAttribute("isLibrarian", librarian);
 		
 		// re-direct to the book form
 		forwardDispatcher(request, response, "book-form.jsp");
+	}
+	
+	private void addNewBook(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		// retrieve form data
+		int isbn = Integer.parseInt(request.getParameter("isbn"));
+		String title = request.getParameter("title");
+		String descr = request.getParameter("description");
+		Date addDate = new Date(System.currentTimeMillis());
+		
+		Book newBook = new Book(isbn, title, descr, false, addDate);
+		
+		// add new book to db
+		bookDao.addBook(newBook);
+		
+		// redirect to list
+		response.sendRedirect("booklist");
+		
+	}
+	
+	private void goToEditBookForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int isbn = Integer.parseInt(request.getParameter("isbn"));
+		
+		Book book = bookDao.getBookById(isbn);
+		
+		request.setAttribute("book", book);
+		
+		forwardDispatcher(request, response, "book-form.jsp");
+		
+	}
+	
+	private void updateBook(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// grab information from the form
+		int isbn = Integer.parseInt(request.getParameter("isbn"));
+		String title = request.getParameter("title").trim();
+		String descr = request.getParameter("description").trim();
+		
+		// get current data for the book
+		Book book = bookDao.getBookById(isbn);
+		
+		// Change the books title and description
+		book.setTitle(title);
+		book.setDescr(descr);
+		
+		// execute the update
+		bookDao.updateBook(book);
+		
+		// redirect
+		response.sendRedirect("booklist");
+		
 	}
 	
 	

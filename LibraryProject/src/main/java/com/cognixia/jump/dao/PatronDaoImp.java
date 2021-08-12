@@ -11,7 +11,7 @@ public class PatronDaoImp implements PatronDao{
 
 	public static final Connection conn = ConnectionManager.getConnection();	
 	private static String SELECT_PATRON_BY_ID = "select * from patron where patron_id = ?";
-	private static String SELECT_PATRON_BY_NAME = "select * from patron where username = ?";
+	private static String SELECT_PATRON_BY_CREDENTIALS = "select * from patron where username = ? and password = ?";
 	private static String INSERT_PATRON = "insert into patron(first_name, last_name, username, password, account_frozon) values(?, ?, ?, ?, ?)";
 	private static String UPDATE_PATRON = "update patron set first_name = ?, last_name = ?, username = ?, password = ? where patron_id = ?";
 
@@ -39,21 +39,24 @@ public class PatronDaoImp implements PatronDao{
 		return patron;
 	}
 	@Override
-	public Patron getPatronByUsername(String username) {
+	public Patron getPatronByCredentials(String username, String password) {
 		Patron patron = null;
-		try(PreparedStatement pstmt = conn.prepareStatement(SELECT_PATRON_BY_NAME)) {
+		try(PreparedStatement pstmt = conn.prepareStatement(SELECT_PATRON_BY_CREDENTIALS)) {
 			
-			pstmt.setString(1, username);			
+			pstmt.setString(1, username);
+			pstmt.setString(2, password);
 			ResultSet rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
 				int id = rs.getInt("patron_id");
 				String fname = rs.getString("first_name");
 				String lname = rs.getString("last_name");
-				String password = rs.getString("password");
-				boolean frozon = rs.getBoolean("account_frozon");
-				patron = new Patron(id, fname, lname, username, password, frozon);
+				String pw = rs.getString("password");
+				boolean frozen = rs.getBoolean("account_frozon");
+				patron = new Patron(id, fname, lname, username, pw, frozen);
 			}
+			
+			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

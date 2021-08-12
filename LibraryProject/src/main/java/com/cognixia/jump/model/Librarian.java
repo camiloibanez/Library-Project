@@ -1,16 +1,16 @@
 package com.cognixia.jump.model;
 
-public class Librarian {
+public class Librarian extends User{
 
 	private int librarian_id;
-	private String username;
-	private String password;
+	//private String username;
+	//private String password;
 	
 	public Librarian(int librarian_id, String username, String password) {
-		super();
+		super(username, password);
 		this.librarian_id = librarian_id;
-		this.username = username;
-		this.password = password;
+		//this.username = username;
+		//this.password = password;
 	}
 	
 	public int getLibrarian_id() {
@@ -19,6 +19,7 @@ public class Librarian {
 	public void setLibrarian_id(int librarian_id) {
 		this.librarian_id = librarian_id;
 	}
+	/*
 	public String getUsername() {
 		return username;
 	}
@@ -31,10 +32,10 @@ public class Librarian {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
+	*/
 	@Override
 	public String toString() {
-		return "Librarian [librarian_id=" + librarian_id + ", username=" + username + ", password=" + password + "]";
+		return "Librarian [librarian_id=" + librarian_id  + super.toString()+ "]";
 	}
 	
 }

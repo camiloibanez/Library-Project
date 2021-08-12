@@ -109,16 +109,22 @@ public class BookServlet extends HttpServlet {
 			
 			// TODO LATER: Bonus features
 			case "/signup":
-				// add new patron
+				//go to account form
+				goToNewAccountForm(request, response);
 				break;
 			case "/adduser":
-				// make update to db for patron
+				//add new patron to db
+				addNewAccount(request, response);
 				break;
+			case "/editaccount":
+				//go to account form
+				goToEditAccountForm(request, response);
+			case "/edituser":
+				//update patron info
+				updateAccount(request, response);
 			case "/accounts":
-				listAccounts(request, response);
 				break;
 			case "/logout":
-				logOut(request, response);
 				break;
 			default:
 				// redirect to home page
@@ -155,7 +161,7 @@ public class BookServlet extends HttpServlet {
 
 			} else {
 				System.out.println("Incorrect username and password");
-				response.sendRedirect("/LibraryProject/");
+				response.sendRedirect("/");
 			}
 			
 		} else {
@@ -182,7 +188,7 @@ public class BookServlet extends HttpServlet {
 			
 			} else {
 				System.out.println("Incorrect username and password");
-				response.sendRedirect("/LibraryProject/");
+				response.sendRedirect("/");
 			}
 			
 		 }
@@ -282,7 +288,7 @@ public class BookServlet extends HttpServlet {
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
 		
 		Book book = bookDao.getBookById(isbn);
-		System.out.println(book);
+		
 		request.setAttribute("book", book);
 		
 		forwardDispatcher(request, response, "book-form.jsp");
@@ -309,24 +315,58 @@ public class BookServlet extends HttpServlet {
 		response.sendRedirect("booklist");
 		
 	}
-	
-	public void listAccounts(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		List<Patron> allPatrons = patronDao.listPatrons();
-		
-		request.setAttribute("allPatrons", allPatrons);
-		
-		forwardDispatcher(request, response, "account-list.jsp");
+	private void goToNewAccountForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// re-direct to the account form
+			forwardDispatcher(request, response, "account-form.jsp");
 	}
-	
-	private void logOut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void addNewAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// retrieve form data
+		String fn = request.getParameter("first_name");
+		String ln = request.getParameter("last_name");
+		String username = request.getParameter("username");
+		String pw = request.getParameter("password");
 		
-		session.invalidate();
+		Patron newPatron = new Patron(0, fn, ln, username, pw, true);
 		
-		response.sendRedirect("/LibraryProject/");
-
+		// add new patron to db
+		patronDao.addPatron(newPatron);
+		
+		// redirect to dash
+		response.sendRedirect("dashboard");
 	}
+	private void goToEditAccountForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		int patron_id = Integer.parseInt(request.getParameter("patron_id"));		
+		Patron patron = patronDao.getPatronById(patron_id);
+		
+		request.setAttribute("patron", patron);
+		
+		forwardDispatcher(request, response, "account-form.jsp");
+	}
+	private void updateAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// grab information from the form
+		int patron_id = Integer.parseInt(request.getParameter("patron_id"));		
+		String fn = request.getParameter("first_name");
+		String ln = request.getParameter("last_name");
+		String username = request.getParameter("username");
+		String pw = request.getParameter("password");
+		
+		// get current data for the patron
+		Patron patron = patronDao.getPatronById(patron_id);
+		
+		// Change the patron names and credentials
+		patron.setFirst_name(fn);
+		patron.setLast_name(ln);
+		patron.setUsername(username);
+		patron.setPassword(pw);
 	
+		// execute the update
+		patronDao.updatePatron(patron);
+		
+		// redirect
+		response.sendRedirect("dashboard");
+	
+	}
 	// helper function
 	private void forwardDispatcher(HttpServletRequest request, HttpServletResponse response, String jsp) throws ServletException, IOException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(jsp);

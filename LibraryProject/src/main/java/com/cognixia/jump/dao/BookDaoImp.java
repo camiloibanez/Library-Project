@@ -15,7 +15,7 @@ public class BookDaoImp implements BookDao{
 	public static final Connection conn = ConnectionManager.getConnection();	
 	private static String SELECT_ALL_BOOKS = "select * from book";
 	private static String SELECT_BOOK_BY_ID = "select * from book where isbn = ?";
-	private static String SELECT_BOOK_HISTORY = "select * from book_checkout where patron_id = ?";
+	private static String SELECT_BOOK_HISTORY = "SELECT * FROM book_checkout AS bkc INNER JOIN book AS bk ON bkc.isbn = bk.isbn WHERE bkc.patron_id = ?;";
 	private static String INSERT_BOOK = "insert into book(isbn, title, descr, rented, added_to_library) values(?, ?, ?, ?, ?)";
 	private static String DELETE_BOOK = "delete from book where isbn = ?";
 	private static String UPDATE_BOOK = "update book set title = ?, descr = ? where isbn = ?";
@@ -72,7 +72,7 @@ public class BookDaoImp implements BookDao{
 		
 		try (PreparedStatement pstmt = conn.prepareStatement(SELECT_BOOK_HISTORY)) {
 			
-			pstmt.setInt(id,  id);
+			pstmt.setInt(1,  id);
 			ResultSet rs = pstmt.executeQuery();
 			
 			while (rs.next()) {

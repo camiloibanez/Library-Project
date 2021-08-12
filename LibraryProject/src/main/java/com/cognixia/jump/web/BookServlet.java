@@ -35,6 +35,7 @@ public class BookServlet extends HttpServlet {
 	
 	// TODO NOW: will have to store this in session
 	private boolean isLibrarian;
+	HttpSession session;
 
 	public void init(ServletConfig config) throws ServletException {
 		bookDao = new BookDaoImp();
@@ -128,10 +129,7 @@ public class BookServlet extends HttpServlet {
 		String pw = request.getParameter("pw").trim();
 		isLibrarian = Boolean.parseBoolean(request.getParameter("isLibrarian"));
 		
-		HttpSession session = null;
-		
 		// check if credentials were valid
-		System.out.println(isLibrarian);
 		if (isLibrarian) {
 			
 			Librarian user = librarianDao.getLibrarianByCredentials(username, pw);
@@ -139,7 +137,10 @@ public class BookServlet extends HttpServlet {
 			if(user != null) {
 				session = request.getSession();
 				
+				int librarian_id = user.getLibrarian_id();
+				
 				// Save user information in session
+				session.setAttribute("librarian_id", librarian_id);
 				session.setAttribute("username", username);
 				session.setAttribute("isLibrarian", isLibrarian);
 				session.setAttribute("isLoggedIn", true);
@@ -159,10 +160,12 @@ public class BookServlet extends HttpServlet {
 			if(user != null) {
 				session = request.getSession();
 				
+				int patron_id = user.getPatron_id();
 				String first_name = user.getFirst_name();
 				String last_name = user.getLast_name();
 				
 				// Save user information in session
+				session.setAttribute("patron_id", patron_id);
 				session.setAttribute("first_name", first_name);
 				session.setAttribute("last_name", last_name);
 				session.setAttribute("username", username);
@@ -184,7 +187,9 @@ public class BookServlet extends HttpServlet {
 	private void listUserHistory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// retrieve user data from session
-		int id = Integer.parseInt(request.getParameter("patron_id"));
+//		int id = Integer.parseInt(request.getParameter("patron_id"));
+		
+		int id = (int) session.getAttribute("patron_id");
 		
 		// retrieve user's book history
 		List<Book> userHistory = bookDao.getUserHistory(id);

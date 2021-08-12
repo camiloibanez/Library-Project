@@ -109,19 +109,11 @@ public class BookServlet extends HttpServlet {
 			
 			// TODO LATER: Bonus features
 			case "/signup":
-				//go to account form
-				goToNewAccountForm(request, response);
+				// add new patron
 				break;
 			case "/adduser":
-				//add new patron to db
-				addNewAccount(request, response);
+				// make update to db for patron
 				break;
-			case "/editaccount":
-				//go to account form
-				goToEditAccountForm(request, response);
-			case "/edituser":
-				//update patron info
-				updateAccount(request, response);
 			case "/accounts":
 				break;
 			case "/logout":
@@ -229,9 +221,10 @@ public class BookServlet extends HttpServlet {
 		
 		// retrieve isbn for the selected book
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
+		int id = (int)session.getAttribute("patron_id");
 		
 		// updated it in the db so that it's rented
-		if (bookDao.rentBook(isbn)) {
+		if (bookDao.rentBook(isbn, id)) {
 			// success message
 		}
 		else {
@@ -247,9 +240,10 @@ public class BookServlet extends HttpServlet {
 		
 		// retrieve isbn for select book
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
+		int id =Integer.parseInt(request.getParameter("checkout_id"));
 		
 		// update book so that it has been returned
-		if (bookDao.returnBook(isbn)) {
+		if (bookDao.returnBook(isbn, id)) {
 			// success message
 		}
 		else {
@@ -315,58 +309,8 @@ public class BookServlet extends HttpServlet {
 		response.sendRedirect("booklist");
 		
 	}
-	private void goToNewAccountForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// re-direct to the account form
-			forwardDispatcher(request, response, "account-form.jsp");
-	}
-	private void addNewAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// retrieve form data
-		String fn = request.getParameter("first_name");
-		String ln = request.getParameter("last_name");
-		String username = request.getParameter("username");
-		String pw = request.getParameter("password");
-		
-		Patron newPatron = new Patron(0, fn, ln, username, pw, true);
-		
-		// add new patron to db
-		patronDao.addPatron(newPatron);
-		
-		// redirect to dash
-		response.sendRedirect("dashboard");
-	}
-	private void goToEditAccountForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		int patron_id = Integer.parseInt(request.getParameter("patron_id"));		
-		Patron patron = patronDao.getPatronById(patron_id);
-		
-		request.setAttribute("patron", patron);
-		
-		forwardDispatcher(request, response, "account-form.jsp");
-	}
-	private void updateAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// grab information from the form
-		int patron_id = Integer.parseInt(request.getParameter("patron_id"));		
-		String fn = request.getParameter("first_name");
-		String ln = request.getParameter("last_name");
-		String username = request.getParameter("username");
-		String pw = request.getParameter("password");
-		
-		// get current data for the patron
-		Patron patron = patronDao.getPatronById(patron_id);
-		
-		// Change the patron names and credentials
-		patron.setFirst_name(fn);
-		patron.setLast_name(ln);
-		patron.setUsername(username);
-		patron.setPassword(pw);
 	
-		// execute the update
-		patronDao.updatePatron(patron);
-		
-		// redirect
-		response.sendRedirect("dashboard");
 	
-	}
 	// helper function
 	private void forwardDispatcher(HttpServletRequest request, HttpServletResponse response, String jsp) throws ServletException, IOException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(jsp);

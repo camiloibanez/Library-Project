@@ -8,6 +8,8 @@ public interface BookDao {
 	
 	public Book getBookById(int id);
 	
+	public List<Book> getUserHistory(int id);
+	
 	public boolean addBook(Book book);
 	
 	public boolean deleteBook(int id);

@@ -15,6 +15,7 @@ public class BookDaoImp implements BookDao{
 	public static final Connection conn = ConnectionManager.getConnection();	
 	private static String SELECT_ALL_BOOKS = "select * from book";
 	private static String SELECT_BOOK_BY_ID = "select * from book where isbn = ?";
+	private static String SELECT_BOOK_HISTORY = "select * from book_checkout where patron_id = ?";
 	private static String INSERT_BOOK = "insert into book(isbn, title, descr, rented, added_to_library) values(?, ?, ?, ?, ?)";
 	private static String DELETE_BOOK = "delete from book where isbn = ?";
 	private static String UPDATE_BOOK = "update book set title = ?, descr = ? where isbn = ?";
@@ -56,13 +57,46 @@ public class BookDaoImp implements BookDao{
 				Boolean rented = rs.getBoolean("rented");
 				Date added_to_library = rs.getDate("added_to_library");
 				book = new Book(isbn, title, descr, rented, added_to_library);
-			}			
+			}
+			rs.close();
 			
 		}catch(SQLException e) {
 			e.printStackTrace();
 		}		
 		return book;
 	}
+	
+	@Override
+	public List<Book> getUserHistory(int id) {
+		List<Book> userHistory = new ArrayList<Book>();
+		
+		try (PreparedStatement pstmt = conn.prepareStatement(SELECT_BOOK_HISTORY)) {
+			
+			pstmt.setInt(id,  id);
+			ResultSet rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				int isbn = rs.getInt("isbn");
+				String title = rs.getString("title");
+				String descr = rs.getString("descr");
+				boolean rented = rs.getBoolean("rented");
+				Date checkedout = rs.getDate("checkedout");
+				Date dueDate = rs.getDate("due_date");
+				Date returned = rs.getDate("returned");
+				
+				userHistory.add(new Book(isbn, title, descr, rented, checkedout, dueDate, returned));
+			}
+			
+			rs.close();
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return userHistory;
+	}
+	
 	@Override
 	public boolean addBook(Book book) {
 		

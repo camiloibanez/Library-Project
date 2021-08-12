@@ -183,7 +183,7 @@ public class BookServlet extends HttpServlet {
 				response.sendRedirect("/");
 			}
 			
-		// }
+		 }
 		
 	}
 	

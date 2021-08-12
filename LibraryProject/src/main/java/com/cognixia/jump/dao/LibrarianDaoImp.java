@@ -31,6 +31,9 @@ public class LibrarianDaoImp implements LibrarianDao {
 				String password = rs.getString("password");
 				librarian = new Librarian(id, username, password);
 			}
+			
+			rs.close();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

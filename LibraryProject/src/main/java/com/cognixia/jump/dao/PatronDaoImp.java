@@ -36,6 +36,9 @@ public class PatronDaoImp implements PatronDao{
 				boolean frozen = rs.getBoolean("account_frozen");
 				patron = new Patron(id, fname, lname, username, password, frozen);
 			}
+			
+			rs.close();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -62,6 +65,7 @@ public class PatronDaoImp implements PatronDao{
 			}
 			
 			rs.close();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -131,6 +135,8 @@ public class PatronDaoImp implements PatronDao{
 				
 				patrons.add(patron);
 			}
+			
+			rs.close();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

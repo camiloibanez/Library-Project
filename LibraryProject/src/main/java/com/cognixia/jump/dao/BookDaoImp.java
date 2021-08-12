@@ -37,6 +37,9 @@ public class BookDaoImp implements BookDao{
 				
 				allBooks.add(new Book(isbn, title, descr, rented, added_to_library));				
 			}			
+			
+			rs.close();
+			
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}		

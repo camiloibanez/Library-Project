@@ -58,7 +58,6 @@ public class BookDaoImp implements BookDao{
 				Date added_to_library = rs.getDate("added_to_library");
 				book = new Book(isbn, title, descr, rented, added_to_library);
 			}
-			
 			rs.close();
 			
 		}catch(SQLException e) {
@@ -152,8 +151,6 @@ public class BookDaoImp implements BookDao{
 		}		
 		return false;
 	}
-	
-	@Override
 	public boolean rentBook(int isbn) {
 		try (PreparedStatement pstmt = conn.prepareStatement(RENT_BOOK)) {
 
@@ -169,8 +166,6 @@ public class BookDaoImp implements BookDao{
 		}		
 		return false;
 	}
-	
-	@Override
 	public boolean returnBook(int isbn) {
 		try (PreparedStatement pstmt = conn.prepareStatement(RENT_BOOK)) {
 
@@ -187,5 +182,23 @@ public class BookDaoImp implements BookDao{
 		return false;
 	}
 	
+	public static void main(String[] args) {
+		BookDao dao = new BookDaoImp();
+		List<Book> books = dao.getAllBooks();
+		
+		for(Book b: books) {
+			System.out.println(b);
+		}
+		
+		Book handmaid = new Book(1480560103, "The Handmaid's Tale", "Dystopian feminist fiction", false, new Date(System.currentTimeMillis()) );
+		boolean added = dao.addBook(handmaid);
+		System.out.println(added);
+		boolean returned = dao.returnBook(1480560103);
+		System.out.println(returned);
+		boolean rent = dao.rentBook(1480560103);
+		System.out.println(rent);
+		boolean deleted = dao.deleteBook(1480560103);
+		System.out.println(deleted);
+	}
 	
 }

@@ -65,17 +65,14 @@ public class BookServlet extends HttpServlet {
 				break;
 			case "/checkout":
 				// checkouts a book
-				checkoutBook(request, response);
 				break;
 			case "/return":
 				// returns a book
-				returnBook(request, response);
 				break;
 			
 			// --- LIBRARIAN ONLY
 			case "/newbook":
 				// add a new book
-				goToNewBookForm(request, response);
 				break;
 			case "/addbook":
 				// make update to db for books
@@ -110,15 +107,15 @@ public class BookServlet extends HttpServlet {
 		// grab values needed to verify user credentials
 		String username = request.getParameter("username");
 		String pw = request.getParameter("pw");
-
-		librarian = Boolean.parseBoolean(request.getParameter("isLibrarian"));
+		boolean isLibrarian = Boolean.parseBoolean(request.getParameter("isLibarian"));
 		
 		// TODO: Make suggestion to create a User class that Patron and Librarian inherits from
 		
 		// check if credentials were valid
-//		if (librarian) {
-//			
-//		}
+
+		if (librarian) {
+			
+		}
 		
 		
 		// if valid user (patron/librarian)
@@ -171,17 +168,12 @@ public class BookServlet extends HttpServlet {
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
 		
 		// updated it in the db so that it's rented
-		if (bookDao.rentBook(isbn)) {
-			// some sort of success message
-		}
-		else {
-			// some sort of error message
-		}
 		
 		
-		// refresh the page/list -> either return to library book list or go to user history
+		// refresh the page/list
 	}
 	
+
 	private void returnBook(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// retrieve isbn for select book

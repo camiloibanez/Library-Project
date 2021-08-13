@@ -248,6 +248,12 @@ public class BookServlet extends HttpServlet {
 		String pw = request.getParameter("pw").trim();
 		isLibrarian = Boolean.parseBoolean(request.getParameter("isLibrarian"));
 		
+		PrintWriter out = response.getWriter();
+		String incorrectCredentialsRedirect = "<script type=\"text/javascript\">" +
+				"alert('Incorrect username and password');" + 
+				"location='index.jsp';" +
+				"</script>";
+		
 		// check if credentials were valid
 		if (isLibrarian) {
 			
@@ -268,8 +274,7 @@ public class BookServlet extends HttpServlet {
 				forwardDispatcher(request, response, "dashboard.jsp");
 
 			} else {
-				System.out.println("Incorrect username and password");
-				response.sendRedirect("/LibraryProject/");
+				out.print(incorrectCredentialsRedirect);
 			}
 			
 		} else {
@@ -297,8 +302,7 @@ public class BookServlet extends HttpServlet {
 				forwardDispatcher(request, response, "dashboard.jsp");
 			
 			} else {
-				System.out.println("Incorrect username and password");
-				response.sendRedirect("/LibraryProject/");
+				out.print(incorrectCredentialsRedirect);
 			}
 			
 		 }

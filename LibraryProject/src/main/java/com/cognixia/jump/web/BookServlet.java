@@ -187,6 +187,7 @@ public class BookServlet extends HttpServlet {
 				}
 				break;
 			case "/accounts":
+
 				try {
 					if((boolean) session.getAttribute("isLoggedIn")) {
 						listAccounts(request, response);
@@ -203,6 +204,7 @@ public class BookServlet extends HttpServlet {
 				} catch(Exception e) {
 					out.print(loggedOutRedirect);
 				}
+
 				break;
 			default:
 				// redirect to home page
@@ -245,7 +247,7 @@ public class BookServlet extends HttpServlet {
 
 			} else {
 				System.out.println("Incorrect username and password");
-				response.sendRedirect("/LibraryProject/");
+				response.sendRedirect("/");
 			}
 			
 		} else {
@@ -272,7 +274,7 @@ public class BookServlet extends HttpServlet {
 			
 			} else {
 				System.out.println("Incorrect username and password");
-				response.sendRedirect("/LibraryProject/");
+				response.sendRedirect("/");
 			}
 			
 		 }
@@ -313,9 +315,10 @@ public class BookServlet extends HttpServlet {
 		
 		// retrieve isbn for the selected book
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
+		int id = (int)session.getAttribute("patron_id");
 		
 		// updated it in the db so that it's rented
-		if (bookDao.rentBook(isbn)) {
+		if (bookDao.rentBook(isbn, id)) {
 			// success message
 		}
 		else {
@@ -331,9 +334,10 @@ public class BookServlet extends HttpServlet {
 		
 		// retrieve isbn for select book
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
+		int id =Integer.parseInt(request.getParameter("checkout_id"));
 		
 		// update book so that it has been returned
-		if (bookDao.returnBook(isbn)) {
+		if (bookDao.returnBook(isbn, id)) {
 			// success message
 		}
 		else {
@@ -372,7 +376,7 @@ public class BookServlet extends HttpServlet {
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
 		
 		Book book = bookDao.getBookById(isbn);
-		System.out.println(book);
+		
 		request.setAttribute("book", book);
 		
 		forwardDispatcher(request, response, "book-form.jsp");
@@ -400,22 +404,6 @@ public class BookServlet extends HttpServlet {
 		
 	}
 	
-	public void listAccounts(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		List<Patron> allPatrons = patronDao.listPatrons();
-		
-		request.setAttribute("allPatrons", allPatrons);
-		
-		forwardDispatcher(request, response, "account-list.jsp");
-	}
-	
-	private void logOut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		session.invalidate();
-		
-		response.sendRedirect("/LibraryProject/");
-
-	}
 	
 	// helper function
 	private void forwardDispatcher(HttpServletRequest request, HttpServletResponse response, String jsp) throws ServletException, IOException {

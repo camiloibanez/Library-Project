@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -172,6 +173,12 @@ public class BookServlet extends HttpServlet {
 				
 				// Has to be accessible from logged out to create new account
 				goToAccountForm(request, response);
+		
+				break;
+			case "/createLibrarian":
+				
+				// Has to be accessible from logged out to create new account
+				createAccountForm(request, response);
 		
 				break;
 			case "/signup":
@@ -373,28 +380,36 @@ public class BookServlet extends HttpServlet {
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
 		int id =Integer.parseInt(request.getParameter("checkout_id"));
 		
-//		PrintWriter out = response.getWriter();
-//		String returnABook = "<script type=\"text/javascript\">" +
-//				"alert('You're book has been safely returned');" + 
-//				"location='history';" +
-//				"</script>";
-//		String errorReturningABook = "<script type=\"text/javascript\">" +
-//				"alert('Oh no! You were unable to return that book at this time.');" + 
-//				"location='history';" +
-//				"</script>";
+		PrintWriter out = response.getWriter();
+		String returnABook = "<script type=\"text/javascript\">" +
+				"alert('Your book has been safely returned');" + 
+				"location='history';" +
+				"</script>";
+		String errorReturningABook = "<script type=\"text/javascript\">" +
+				"alert('Oh no! You were unable to return that book at this time.');" + 
+				"location='history';" +
+				"</script>";
 		
 		// update book so that it has been returned
 		if (bookDao.returnBook(isbn, id)) {
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			// success message
-//			out.print(returnABook);
+			out.print(returnABook);
 		}
 		else {
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			// error message
-//			out.print(errorReturningABook);
+			out.print(errorReturningABook );
 		}
 		
-		// refresh page
-		response.sendRedirect("history");
 	}
 	
 	private void goToNewBookForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -497,9 +512,16 @@ public class BookServlet extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		// re-direct to the book form
+		
 		forwardDispatcher(request, response, "account-form.jsp");
 	}
+	
+	private void createAccountForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		forwardDispatcher(request, response, "account-form.jsp");
+		
+	}
+		
 
 	private void updateUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int id = Integer.parseInt(request.getParameter("id"));
@@ -528,14 +550,16 @@ public class BookServlet extends HttpServlet {
 		if(willBeLibrarian) {
 			Librarian librarian = new Librarian(0, username, password);
 			librarianDao.addLibrarian(librarian);
+			
+			response.sendRedirect("dashboard");
 		} else {
 			String first_name = request.getParameter("first_name");
 			String last_name = request.getParameter("last_name");
 			Patron patron = new Patron(0, first_name, last_name, username, password, true);
 			patronDao.addPatron(patron);
+			
+			response.sendRedirect("/LibraryProject/");
 		}
-		
-		response.sendRedirect("/LibraryProject/");
 	}
 	
 	private void logOut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

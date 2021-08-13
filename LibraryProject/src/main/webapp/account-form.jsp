@@ -43,30 +43,22 @@
 		<c:if test="${ !isLibrarian }">
 			<div class="form-group">
 				<label for="first_name" class="form-label">First Name</label> 
-				<input type="text" id="first_name" name = "first_name" class="form-control" value="<c:out value='${ user.first_name }' />">
+				<input type="text" id="first_name" name = "first_name" class="form-control" value="<c:out value='${ user.first_name }' />" required>
 			</div>
 				
 			<div class="form-group">
 				<label for="last_name" class="form-label">Last Name</label> 
-				<input type="text" id="last_name" name = "last_name" class="form-control" value="<c:out value='${ user.last_name }' />">
+				<input type="text" id="last_name" name = "last_name" class="form-control" value="<c:out value='${ user.last_name }' />" required>
 			</div>
 			
 			<input type="hidden" name="account_frozen" value="<c:out value='${ user.account_frozen }' />">
+			
+			<input type="hidden" name="willBeLibrarian" value="false">
 		</c:if>
 		
-		<c:if test="${ !isLoggedIn }">
-			<div class="form-check">
-			  <input class="form-check-input" type="radio" name="willBeLibrarian" id="patron" value="false" required>
-			  <label class="form-check-label" for="patron">
-			    Patron
-			  </label>
-			</div>
-			<div class="form-check">
-			  <input class="form-check-input" type="radio" name="willBeLibrarian" id="librarian" value="true">
-			  <label class="form-check-label" for="librarian">
-			    Librarian
-			  </label>
-			</div>
+		<c:if test="${ isLibrarian }">
+		
+			<input type="hidden" name="willBeLibrarian" value="true">
 		</c:if>
 			  
 	  	<button type="submit" 

@@ -34,6 +34,7 @@
 				        <a class="nav-link" href="<%= request.getContextPath() %>/accounts">Accounts</a>
 				        <a class="nav-link" href="<%= request.getContextPath() %>/booklist">Library Books</a>
 				        <a class="nav-link" href="<%= request.getContextPath() %>/newbook">Add Book</a>
+				        <a class="nav-link" href="<%= request.getContextPath() %>/createLibrarian">Add Librarian</a>
 				        <a class="nav-link" href="<%= request.getContextPath() %>/accountForm">Profile</a>
 			        	<a class="nav-link" href="<%= request.getContextPath() %>/logout">Logout</a>
 			        </c:if>

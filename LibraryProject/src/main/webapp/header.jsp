@@ -16,7 +16,12 @@
 		
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		  <div class="container-fluid">
-		    <a class="navbar-brand" href="<%= request.getContextPath() %>/dashboard">Dashboard</a>
+		  	<c:if test="${ !isLoggedIn }">
+		    	<a class="navbar-brand" href="<%= request.getContextPath() %>/">Dashboard</a>
+		    </c:if>
+		    <c:if test="${ isLoggedIn }">
+		    	<a class="navbar-brand" href="<%= request.getContextPath() %>/dashboard">Dashboard</a>
+		    </c:if>
 		    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 		      <span class="navbar-toggler-icon"></span>
 		    </button>
@@ -28,6 +33,7 @@
 			        <c:if test="${ isLibrarian }">
 				        <a class="nav-link" href="<%= request.getContextPath() %>/accounts">Accounts</a>
 				        <a class="nav-link" href="<%= request.getContextPath() %>/booklist">Library Books</a>
+				        <a class="nav-link" href="<%= request.getContextPath() %>/newbook">Add Book</a>
 				        <a class="nav-link" href="<%= request.getContextPath() %>/adduser">Profile</a>
 			        	<a class="nav-link" href="<%= request.getContextPath() %>/logout">Logout</a>
 			        </c:if>

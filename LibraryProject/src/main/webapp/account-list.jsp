@@ -10,6 +10,7 @@
 		
 			<thead>
 				<tr>
+					<th>id</th>
 					<th>first name</th>
 					<th>last name</th>
 					<th>username</th>
@@ -21,15 +22,19 @@
 			
 			<tbody>
 			
-				<c:forEach var="user" items="${ allUsers }">
+				<c:forEach var="user" items="${ allPatrons }">
 					
 					<tr>
 						<td>
-							<c:out value="${ user.firstName }" />
+							<c:out value="${ user.patron_id }" />
 						</td>
 						
 						<td>
-							<c:out value="${ user.lastName }" />
+							<c:out value="${ user.first_name }" />
+						</td>
+						
+						<td>
+							<c:out value="${ user.last_name }" />
 						</td>
 						
 						<td>
@@ -41,18 +46,18 @@
 						</td>
 						
 						<td>
-							<c:out value="${ user.frozen}" />
+							<c:out value="${ user.account_frozen }" />
 						</td>
 	
 						<td>
-							<c:if test="${ frozen }">
-								<a href="edit?id=<c:out value='${ user.id }' />">
+							<c:if test="${ user.account_frozen }">
+								<a href="edit?id=<c:out value='${ user.patron_id }' />">
 									<button class="btn btn-primary">Unfreeze</button>
 								</a>
 							</c:if>
 	
-							<c:if test="${ !frozen }">
-								<a href="edit?id=<c:out value='${ user.id }' />">
+							<c:if test="${ !user.account_frozen }">
+								<a href="edit?id=<c:out value='${ user.patron_id }' />">
 									<button class="btn btn-primary">Freeze</button>
 								</a>
 							</c:if>

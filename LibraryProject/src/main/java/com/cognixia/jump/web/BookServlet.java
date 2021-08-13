@@ -1,6 +1,7 @@
 package com.cognixia.jump.web;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
@@ -61,6 +62,11 @@ public class BookServlet extends HttpServlet {
 		
 		// get the ending url to determine what action to perform
 		String action = request.getServletPath();
+		PrintWriter out = response.getWriter();
+		String loggedOutRedirect = "<script type=\"text/javascript\">" +
+				"alert('You are not logged in');" + 
+				"location='index.jsp';" +
+				"</script>";
 		
 		// switch case to handle actions
 		switch(action) {
@@ -69,58 +75,146 @@ public class BookServlet extends HttpServlet {
 				signInUser(request, response);
 				break;
 			case "/dashboard":
-				forwardDispatcher(request, response, "dashboard.jsp");
+				try {
+					if((boolean) session.getAttribute("isLoggedIn")) {
+						forwardDispatcher(request, response, "dashboard.jsp");
+					}					
+				} catch(Exception e) {
+					out.print(loggedOutRedirect);
+				}
 				break;
 			
 			case "/history":
-				// user's history as well as currently checked out books
-				listUserHistory(request, response);
+				try {
+					if((boolean) session.getAttribute("isLoggedIn")) {
+						// user's history as well as currently checked out books
+						listUserHistory(request, response);
+					}
+				} catch(Exception e) {
+					out.print(loggedOutRedirect);
+				}
 				break;
 			case "/booklist":
-				// list books in the library
-				listAllBooks(request, response);
+				try {
+					if((boolean) session.getAttribute("isLoggedIn")) {
+						// list books in the library
+						listAllBooks(request, response);	
+					}
+				} catch(Exception e) {
+					out.print(loggedOutRedirect);
+				}
 				break;
 			case "/checkout":
-				// checkouts a book
-				checkoutBook(request, response);
+				try {
+					if((boolean) session.getAttribute("isLoggedIn")) {
+						// checkouts a book
+						checkoutBook(request, response);
+					}
+				} catch(Exception e) {
+					out.print(loggedOutRedirect);
+				}
 				break;
 			case "/return":
-				// returns a book
-				returnBook(request, response);
+				try {
+					if((boolean) session.getAttribute("isLoggedIn")) {
+						// returns a book
+						returnBook(request, response);
+					}
+				} catch(Exception e) {
+					out.print(loggedOutRedirect);
+				}
 				break;
 			
 			// --- LIBRARIAN ONLY
 			case "/newbook":
-				// add a new book
-				goToNewBookForm(request, response);
+				try {
+					if((boolean) session.getAttribute("isLoggedIn")) {
+						// add a new book
+						goToNewBookForm(request, response);
+					}
+				} catch(Exception e) {
+					out.print(loggedOutRedirect);
+				}
 				break;
 			case "/addbook":
-				// make update to db for books
-				addNewBook(request, response);
+				try {
+					if((boolean) session.getAttribute("isLoggedIn")) {
+						// make update to db for books
+						addNewBook(request, response);
+					}
+				} catch(Exception e) {
+					out.print(loggedOutRedirect);
+				}
 				break;
 			case "/editbook":
-				// edit book information
-				goToEditBookForm(request, response);
+				try {
+					if((boolean) session.getAttribute("isLoggedIn")) {
+						// edit book information
+						goToEditBookForm(request, response);
+					}
+				} catch(Exception e) {
+					out.print(loggedOutRedirect);
+				}
 				break;
 			case "/updatebook":
-				// update book information
-				updateBook(request, response);
+				try {
+					if((boolean) session.getAttribute("isLoggedIn")) {
+						// update book information
+						updateBook(request, response);
+					}
+				} catch(Exception e) {
+					out.print(loggedOutRedirect);
+				}
 				break;
 			
 			// TODO LATER: Bonus features
 			case "/signup":
-				// add new patron
+				try {
+					if((boolean) session.getAttribute("isLoggedIn")) {
+						// add new patron
+					}
+				} catch(Exception e) {
+					out.print(loggedOutRedirect);
+				}
 				break;
 			case "/adduser":
-				// make update to db for patron
+				try {
+					if((boolean) session.getAttribute("isLoggedIn")) {
+						// make update to db for patron
+					}
+				} catch(Exception e) {
+					out.print(loggedOutRedirect);
+				}
 				break;
 			case "/accounts":
+
+				try {
+					if((boolean) session.getAttribute("isLoggedIn")) {
+						listAccounts(request, response);
+					}
+				} catch(Exception e) {
+					out.print(loggedOutRedirect);
+				}
 				break;
 			case "/logout":
+				try {
+					if((boolean) session.getAttribute("isLoggedIn")) {
+						logOut(request, response);
+					}
+				} catch(Exception e) {
+					out.print(loggedOutRedirect);
+				}
+
 				break;
 			default:
 				// redirect to home page
-				response.sendRedirect("/");
+				try {
+					if((boolean) session.getAttribute("isLoggedIn")) {
+						forwardDispatcher(request, response, "dashboard.jsp");
+					}
+				} catch(Exception e) {
+					response.sendRedirect("/LibraryProject/");
+				}
 				break;
 			}
 	}
@@ -221,9 +315,10 @@ public class BookServlet extends HttpServlet {
 		
 		// retrieve isbn for the selected book
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
+		int id = (int)session.getAttribute("patron_id");
 		
 		// updated it in the db so that it's rented
-		if (bookDao.rentBook(isbn)) {
+		if (bookDao.rentBook(isbn, id)) {
 			// success message
 		}
 		else {
@@ -239,9 +334,10 @@ public class BookServlet extends HttpServlet {
 		
 		// retrieve isbn for select book
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
+		int id =Integer.parseInt(request.getParameter("checkout_id"));
 		
 		// update book so that it has been returned
-		if (bookDao.returnBook(isbn)) {
+		if (bookDao.returnBook(isbn, id)) {
 			// success message
 		}
 		else {

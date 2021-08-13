@@ -16,7 +16,7 @@ public interface BookDao {
 	
 	public boolean updateBook(Book book);
 	
-	public boolean returnBook(int isbn);
+	public boolean returnBook(int isbn, int id);
 	
-	public boolean rentBook(int isbn);
+	public boolean rentBook(int isbn, int id);
 }

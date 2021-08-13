@@ -379,24 +379,14 @@ public class BookServlet extends HttpServlet {
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
 		int id =Integer.parseInt(request.getParameter("checkout_id"));
 		
-//		PrintWriter out = response.getWriter();
-//		String returnABook = "<script type=\"text/javascript\">" +
-//				"alert('You're book has been safely returned');" + 
-//				"location='history';" +
-//				"</script>";
-//		String errorReturningABook = "<script type=\"text/javascript\">" +
-//				"alert('Oh no! You were unable to return that book at this time.');" + 
-//				"location='history';" +
-//				"</script>";
-		
 		// update book so that it has been returned
 		if (bookDao.returnBook(isbn, id)) {
 			// success message
-//			out.print(returnABook);
+			
 		}
 		else {
 			// error message
-//			out.print(errorReturningABook);
+			
 		}
 		
 		// refresh page

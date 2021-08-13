@@ -12,7 +12,11 @@
 				<th>isbn</th>
 				<th>Title</th>
 				<th>Description</th>
+				<th>Checked Out</th>
+				<th>Due Date</th>
+				<th>Return Date</th>
 				<th>Actions</th>
+				
 			</tr>
 		</thead>
 		
@@ -34,8 +38,20 @@
 					</td>
 					
 					<td>
+						<c:out value="${ book.checkedout }" />
+					</td>
+					
+					<td>
+						<c:out value="${ book.due_date }" />
+					</td>
+					
+					<td>
+						<c:out value="${ book.returned }" />
+					</td>
+					
+					<td>
 						<c:if test="${ book.rented }">
-							<a href="return?isbn=<c:out value='${ book.isbn }' />">
+							<a href="return?isbn=<c:out value='${ book.isbn }' />&checkout_id=<c:out value='${ book.checkout_id }' />">
 								<button class="btn btn-primary">Return</button>
 							</a>
 						</c:if>

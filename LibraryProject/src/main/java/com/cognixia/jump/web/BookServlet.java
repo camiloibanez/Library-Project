@@ -168,6 +168,11 @@ public class BookServlet extends HttpServlet {
 				break;
 			
 			// TODO LATER: Bonus features
+			case "/accountForm":
+				
+				goToAccountForm(request, response);
+		
+				break;
 			case "/signup":
 				try {
 					if((boolean) session.getAttribute("isLoggedIn")) {
@@ -445,6 +450,29 @@ public class BookServlet extends HttpServlet {
 		request.setAttribute("allPatrons", allPatrons);
 
 		forwardDispatcher(request, response, "account-list.jsp");
+	}
+
+	private void goToAccountForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		int id;
+		
+		try {
+			if((boolean) session.getAttribute("isLoggedIn")) {
+				if(isLibrarian) {
+					id = (int) session.getAttribute("librarian_id");
+					Librarian librarian = librarianDao.getLibrarianById(id);
+					request.setAttribute("user", librarian);
+				} else {
+					id = (int) session.getAttribute("patron_id");
+					Patron patron = patronDao.getPatronById(id);
+					request.setAttribute("user", patron);
+				}			
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// re-direct to the book form
+		forwardDispatcher(request, response, "account-form.jsp");
 	}
 
 	private void logOut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

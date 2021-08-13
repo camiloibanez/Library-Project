@@ -12,7 +12,7 @@
 	<c:if test="${ user == null }">
 		<h1>Create Account</h1>
 		
-		<% formType = "adduser"; %>
+		<% formType = "signup"; %>
 	</c:if>
 	
 	<form action="<%= formType %>" method="get">
@@ -42,14 +42,16 @@
 		<%-- Only show inputs for first and last name if user is a patron --%>
 		<c:if test="${ !isLibrarian }">
 			<div class="form-group">
-				<label for="firstName" class="form-label">First Name</label> 
-				<input type="text" id="firstName" name = "firstName" class="form-control" value="<c:out value='${ user.first_name }' />">
+				<label for="first_name" class="form-label">First Name</label> 
+				<input type="text" id="first_name" name = "first_name" class="form-control" value="<c:out value='${ user.first_name }' />">
 			</div>
 				
 			<div class="form-group">
-				<label for="lastName" class="form-label">Last Name</label> 
-				<input type="text" id="lastName" name = "lastName" class="form-control" value="<c:out value='${ user.last_name }' />">
+				<label for="last_name" class="form-label">Last Name</label> 
+				<input type="text" id="last_name" name = "last_name" class="form-control" value="<c:out value='${ user.last_name }' />">
 			</div>
+			
+			<input type="hidden" name="account_frozen" value="<c:out value='${ user.account_frozen }' />">
 		</c:if>
 			  
 	  	<button type="submit" 

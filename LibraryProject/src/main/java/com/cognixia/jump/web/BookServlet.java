@@ -170,6 +170,7 @@ public class BookServlet extends HttpServlet {
 			// TODO LATER: Bonus features
 			case "/accountForm":
 				
+				// Has to be accessible from logged out to create new account
 				goToAccountForm(request, response);
 		
 				break;
@@ -182,10 +183,11 @@ public class BookServlet extends HttpServlet {
 					out.print(loggedOutRedirect);
 				}
 				break;
-			case "/adduser":
+			case "/updateuser":
 				try {
 					if((boolean) session.getAttribute("isLoggedIn")) {
 						// make update to db for patron
+						updateUser(request, response);
 					}
 				} catch(Exception e) {
 					out.print(loggedOutRedirect);
@@ -475,6 +477,25 @@ public class BookServlet extends HttpServlet {
 		forwardDispatcher(request, response, "account-form.jsp");
 	}
 
+	private void updateUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		String username = request.getParameter("username").trim();
+		String password = request.getParameter("pw").trim();
+		
+		if(!isLibrarian) {
+			String first_name = request.getParameter("first_name").trim();
+			String last_name = request.getParameter("last_name").trim();
+			boolean account_frozen = Boolean.parseBoolean(request.getParameter("account_frozen"));
+			Patron patron = new Patron(id, first_name, last_name, username, password, account_frozen);
+			patronDao.updatePatron(patron);
+		} else {
+			Librarian librarian = new Librarian(id, username, password);
+			librarianDao.updateLibrarian(librarian);
+		}
+		
+		response.sendRedirect("dashboard");
+	}
+	
 	private void logOut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		session.invalidate();

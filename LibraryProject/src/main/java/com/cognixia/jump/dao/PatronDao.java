@@ -11,5 +11,7 @@ public interface PatronDao {
 	public boolean addPatron(Patron patron);
 	public boolean updatePatron(Patron patron);
 	public List<Patron> listPatrons();
+	public boolean unfreezePatron(int id);
+	public boolean freezePatron(int id);
 	
 }

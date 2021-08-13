@@ -18,6 +18,8 @@ public class PatronDaoImp implements PatronDao{
 	private static String INSERT_PATRON = "insert into patron(first_name, last_name, username, password, account_frozon) values(?, ?, ?, ?, ?)";
 	private static String UPDATE_PATRON = "update patron set first_name = ?, last_name = ?, username = ?, password = ? where patron_id = ?";
 	private static String LIST_PATRONS = "select * from patron";
+	private static String UNFREEZE_PATRON = "update patron set account_frozen = false where patron_id = ?";
+	private static String FREEZE_PATRON = "update patron set account_frozen = true where patron_id = ?";
 
 
 	@Override
@@ -144,4 +146,35 @@ public class PatronDaoImp implements PatronDao{
 		
 		return patrons;
 	}
+	
+	public boolean unfreezePatron(int id) {
+		try(PreparedStatement pstmt = conn.prepareStatement(UNFREEZE_PATRON)) {
+			
+			pstmt.setInt(1, id);
+			
+			if (pstmt.executeUpdate() > 0) {
+				return true;
+			}	
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+		
+	}
+	
+	public boolean freezePatron(int id) {
+		try(PreparedStatement pstmt = conn.prepareStatement(FREEZE_PATRON)) {
+			
+			pstmt.setInt(1, id);
+			
+			if (pstmt.executeUpdate() > 0) {
+				return true;
+			}	
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+		
+	}
+	
 }

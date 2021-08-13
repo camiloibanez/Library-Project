@@ -51,13 +51,13 @@
 	
 						<td>
 							<c:if test="${ user.account_frozen }">
-								<a href="edit?id=<c:out value='${ user.patron_id }' />">
+								<a href="unfreeze?id=<c:out value='${ user.patron_id }' />">
 									<button class="btn btn-primary">Unfreeze</button>
 								</a>
 							</c:if>
 	
 							<c:if test="${ !user.account_frozen }">
-								<a href="edit?id=<c:out value='${ user.patron_id }' />">
+								<a href="freeze?id=<c:out value='${ user.patron_id }' />">
 									<button class="btn btn-primary">Freeze</button>
 								</a>
 							</c:if>

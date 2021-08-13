@@ -50,7 +50,7 @@
 					</td>
 					
 					<td>
-						<c:if test="${ book.rented }">
+						<c:if test="${ book.returned == null }">
 							<a href="return?isbn=<c:out value='${ book.isbn }' />&checkout_id=<c:out value='${ book.checkout_id }' />">
 								<button class="btn btn-primary">Return</button>
 							</a>

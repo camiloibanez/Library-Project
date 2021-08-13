@@ -196,6 +196,24 @@ public class BookServlet extends HttpServlet {
 					out.print(loggedOutRedirect);
 				}
 				break;
+			case "/unfreeze":
+				try {
+					if((boolean) session.getAttribute("isLoggedIn")) {
+						unfreeze(request, response);
+					}
+				} catch(Exception e) {
+					out.print(loggedOutRedirect);
+				}
+				break;
+			case "/freeze":
+				try {
+					if((boolean) session.getAttribute("isLoggedIn")) {
+						freeze(request, response);
+					}
+				} catch(Exception e) {
+					out.print(loggedOutRedirect);
+				}
+				break;
 			case "/logout":
 				try {
 					if((boolean) session.getAttribute("isLoggedIn")) {
@@ -404,6 +422,38 @@ public class BookServlet extends HttpServlet {
 		
 	}
 	
+	public void unfreeze(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		
+		patronDao.unfreezePatron(id);
+		
+		forwardDispatcher(request, response, "accounts");
+	}
+	
+	public void freeze(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		
+		patronDao.freezePatron(id);
+		
+		forwardDispatcher(request, response, "accounts");
+	}
+	
+	public void listAccounts(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		List<Patron> allPatrons = patronDao.listPatrons();
+
+		request.setAttribute("allPatrons", allPatrons);
+
+		forwardDispatcher(request, response, "account-list.jsp");
+	}
+
+	private void logOut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		session.invalidate();
+
+		response.sendRedirect("/LibraryProject/");
+
+	}
 	
 	// helper function
 	private void forwardDispatcher(HttpServletRequest request, HttpServletResponse response, String jsp) throws ServletException, IOException {

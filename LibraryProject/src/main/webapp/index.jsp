@@ -35,6 +35,6 @@
 		</form>
 </div>
 
-<script>function notLoggedIn() { alert('You are not logged in')} </script>
+
 <%@ include file="footer.jsp" %>
 		

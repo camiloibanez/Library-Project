@@ -168,19 +168,23 @@ public class BookServlet extends HttpServlet {
 				break;
 			
 			// TODO LATER: Bonus features
-			case "/signup":
-				try {
-					if((boolean) session.getAttribute("isLoggedIn")) {
-						// add new patron
-					}
-				} catch(Exception e) {
-					out.print(loggedOutRedirect);
-				}
+			case "/accountForm":
+				
+				// Has to be accessible from logged out to create new account
+				goToAccountForm(request, response);
+		
 				break;
-			case "/adduser":
+			case "/signup":
+				// Has to be accessible from logged out to create new account
+				// add new patron
+				addUser(request, response);
+					
+				break;
+			case "/updateuser":
 				try {
 					if((boolean) session.getAttribute("isLoggedIn")) {
 						// make update to db for patron
+						updateUser(request, response);
 					}
 				} catch(Exception e) {
 					out.print(loggedOutRedirect);
@@ -191,6 +195,24 @@ public class BookServlet extends HttpServlet {
 				try {
 					if((boolean) session.getAttribute("isLoggedIn")) {
 						listAccounts(request, response);
+					}
+				} catch(Exception e) {
+					out.print(loggedOutRedirect);
+				}
+				break;
+			case "/unfreeze":
+				try {
+					if((boolean) session.getAttribute("isLoggedIn")) {
+						unfreeze(request, response);
+					}
+				} catch(Exception e) {
+					out.print(loggedOutRedirect);
+				}
+				break;
+			case "/freeze":
+				try {
+					if((boolean) session.getAttribute("isLoggedIn")) {
+						freeze(request, response);
 					}
 				} catch(Exception e) {
 					out.print(loggedOutRedirect);
@@ -226,6 +248,12 @@ public class BookServlet extends HttpServlet {
 		String pw = request.getParameter("pw").trim();
 		isLibrarian = Boolean.parseBoolean(request.getParameter("isLibrarian"));
 		
+		PrintWriter out = response.getWriter();
+		String incorrectCredentialsRedirect = "<script type=\"text/javascript\">" +
+				"alert('Incorrect username and password');" + 
+				"location='index.jsp';" +
+				"</script>";
+		
 		// check if credentials were valid
 		if (isLibrarian) {
 			
@@ -246,8 +274,7 @@ public class BookServlet extends HttpServlet {
 				forwardDispatcher(request, response, "dashboard.jsp");
 
 			} else {
-				System.out.println("Incorrect username and password");
-				response.sendRedirect("/");
+				out.print(incorrectCredentialsRedirect);
 			}
 			
 		} else {
@@ -260,12 +287,14 @@ public class BookServlet extends HttpServlet {
 				int patron_id = user.getPatron_id();
 				String first_name = user.getFirst_name();
 				String last_name = user.getLast_name();
+				boolean account_frozen = user.isAccount_frozen();
 				
 				// Save user information in session
 				session.setAttribute("patron_id", patron_id);
 				session.setAttribute("first_name", first_name);
 				session.setAttribute("last_name", last_name);
 				session.setAttribute("username", username);
+				session.setAttribute("account_frozen", account_frozen);
 				session.setAttribute("isLibrarian", isLibrarian);
 				session.setAttribute("isLoggedIn", true);
 				
@@ -273,8 +302,7 @@ public class BookServlet extends HttpServlet {
 				forwardDispatcher(request, response, "dashboard.jsp");
 			
 			} else {
-				System.out.println("Incorrect username and password");
-				response.sendRedirect("/");
+				out.print(incorrectCredentialsRedirect);
 			}
 			
 		 }
@@ -317,16 +345,25 @@ public class BookServlet extends HttpServlet {
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
 		int id = (int)session.getAttribute("patron_id");
 		
+		PrintWriter out = response.getWriter();
+		String youRentedABook = "<script type=\"text/javascript\">" +
+				"alert('You rented a book!');" + 
+				"location='booklist';" +
+				"</script>";
+		String errorRentingABook = "<script type=\"text/javascript\">" +
+				"alert('Oh No! Something went wrong. We were unable to rent you the book at this time.');" + 
+				"location='booklist';" +
+				"</script>";
+		
 		// updated it in the db so that it's rented
 		if (bookDao.rentBook(isbn, id)) {
 			// success message
+			out.print(youRentedABook);
 		}
 		else {
 			// error message
+			out.print(errorRentingABook);
 		}
-		
-		// refresh the page/list
-		response.sendRedirect("booklist");
 	}
 	
 
@@ -336,12 +373,24 @@ public class BookServlet extends HttpServlet {
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
 		int id =Integer.parseInt(request.getParameter("checkout_id"));
 		
+//		PrintWriter out = response.getWriter();
+//		String returnABook = "<script type=\"text/javascript\">" +
+//				"alert('You're book has been safely returned');" + 
+//				"location='history';" +
+//				"</script>";
+//		String errorReturningABook = "<script type=\"text/javascript\">" +
+//				"alert('Oh no! You were unable to return that book at this time.');" + 
+//				"location='history';" +
+//				"</script>";
+		
 		// update book so that it has been returned
 		if (bookDao.returnBook(isbn, id)) {
 			// success message
+//			out.print(returnABook);
 		}
 		else {
 			// error message
+//			out.print(errorReturningABook);
 		}
 		
 		// refresh page
@@ -404,6 +453,98 @@ public class BookServlet extends HttpServlet {
 		
 	}
 	
+	public void unfreeze(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		
+		patronDao.unfreezePatron(id);
+		
+		forwardDispatcher(request, response, "accounts");
+	}
+	
+	public void freeze(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		
+		patronDao.freezePatron(id);
+		
+		forwardDispatcher(request, response, "accounts");
+	}
+	
+	public void listAccounts(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		List<Patron> allPatrons = patronDao.listPatrons();
+
+		request.setAttribute("allPatrons", allPatrons);
+
+		forwardDispatcher(request, response, "account-list.jsp");
+	}
+
+	private void goToAccountForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		int id;
+		
+		try {
+			if((boolean) session.getAttribute("isLoggedIn")) {
+				if(isLibrarian) {
+					id = (int) session.getAttribute("librarian_id");
+					Librarian librarian = librarianDao.getLibrarianById(id);
+					request.setAttribute("user", librarian);
+				} else {
+					id = (int) session.getAttribute("patron_id");
+					Patron patron = patronDao.getPatronById(id);
+					request.setAttribute("user", patron);
+				}			
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// re-direct to the book form
+		forwardDispatcher(request, response, "account-form.jsp");
+	}
+
+	private void updateUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		String username = request.getParameter("username").trim();
+		String password = request.getParameter("pw").trim();
+		
+		if(!isLibrarian) {
+			String first_name = request.getParameter("first_name").trim();
+			String last_name = request.getParameter("last_name").trim();
+			boolean account_frozen = Boolean.parseBoolean(request.getParameter("account_frozen"));
+			Patron patron = new Patron(id, first_name, last_name, username, password, account_frozen);
+			patronDao.updatePatron(patron);
+		} else {
+			Librarian librarian = new Librarian(id, username, password);
+			librarianDao.updateLibrarian(librarian);
+		}
+		
+		response.sendRedirect("dashboard");
+	}
+	
+	private void addUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String username = request.getParameter("username");
+		String password = request.getParameter("pw");
+		boolean willBeLibrarian = Boolean.parseBoolean(request.getParameter("willBeLibrarian"));
+		
+		if(willBeLibrarian) {
+			Librarian librarian = new Librarian(0, username, password);
+			librarianDao.addLibrarian(librarian);
+		} else {
+			String first_name = request.getParameter("first_name");
+			String last_name = request.getParameter("last_name");
+			Patron patron = new Patron(0, first_name, last_name, username, password, true);
+			patronDao.addPatron(patron);
+		}
+		
+		response.sendRedirect("/LibraryProject/");
+	}
+	
+	private void logOut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		session.invalidate();
+
+		response.sendRedirect("/LibraryProject/");
+
+	}
 	
 	// helper function
 	private void forwardDispatcher(HttpServletRequest request, HttpServletResponse response, String jsp) throws ServletException, IOException {

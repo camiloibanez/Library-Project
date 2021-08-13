@@ -57,7 +57,7 @@
 						
 						<c:if test="${ !isLibrarian }">
 		
-							<c:if test="${ !book.rented }">
+							<c:if test="${ !book.rented && !account_frozen }">
 								<td>
 				
 									<a href="checkout?isbn=<c:out value='${ book.isbn }' />">
@@ -67,12 +67,10 @@
 								</td>
 							</c:if>
 							
-							<c:if test="${ book.rented }">
+							<c:if test="${ book.rented || account_frozen }">
 								<td>
 				
-									<a href="checkout?isbn=<c:out value='${ book.isbn }' />">
-										<button class="btn btn-primary" disabled>Checkout</button>
-									</a>
+									<button class="btn btn-primary" disabled>Checkout</button>
 					
 								</td>
 							</c:if>

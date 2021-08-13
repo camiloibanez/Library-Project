@@ -34,21 +34,21 @@
 				        <a class="nav-link" href="<%= request.getContextPath() %>/accounts">Accounts</a>
 				        <a class="nav-link" href="<%= request.getContextPath() %>/booklist">Library Books</a>
 				        <a class="nav-link" href="<%= request.getContextPath() %>/newbook">Add Book</a>
-				        <a class="nav-link" href="<%= request.getContextPath() %>/adduser">Profile</a>
+				        <a class="nav-link" href="<%= request.getContextPath() %>/accountForm">Profile</a>
 			        	<a class="nav-link" href="<%= request.getContextPath() %>/logout">Logout</a>
 			        </c:if>
 			        
 			        <c:if test="${ !isLibrarian }">
 				        <a class="nav-link" href="<%= request.getContextPath() %>/history">Book History</a>
 				        <a class="nav-link" href="<%= request.getContextPath() %>/booklist">Library Books</a>
-				        <a class="nav-link" href="<%= request.getContextPath() %>/adduser">Profile</a>
+				        <a class="nav-link" href="<%= request.getContextPath() %>/accountForm">Profile</a>
 			        	<a class="nav-link" href="<%= request.getContextPath() %>/logout">Logout</a>
 			        </c:if>
 			        
 		        </c:if>
 		        
 		        <c:if test="${ !isLoggedIn }">
-		        	<a class="nav-link" href="#">Create Account</a>
+		        	<a class="nav-link" href="<%= request.getContextPath() %>/accountForm">Create Account</a>
 		        </c:if>
 		        
 		        

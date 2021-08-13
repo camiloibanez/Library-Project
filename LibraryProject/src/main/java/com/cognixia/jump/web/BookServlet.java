@@ -175,7 +175,7 @@ public class BookServlet extends HttpServlet {
 		
 				break;
 			case "/signup":
-				
+				// Has to be accessible from logged out to create new account
 				// add new patron
 				addUser(request, response);
 					
@@ -282,12 +282,14 @@ public class BookServlet extends HttpServlet {
 				int patron_id = user.getPatron_id();
 				String first_name = user.getFirst_name();
 				String last_name = user.getLast_name();
+				boolean account_frozen = user.isAccount_frozen();
 				
 				// Save user information in session
 				session.setAttribute("patron_id", patron_id);
 				session.setAttribute("first_name", first_name);
 				session.setAttribute("last_name", last_name);
 				session.setAttribute("username", username);
+				session.setAttribute("account_frozen", account_frozen);
 				session.setAttribute("isLibrarian", isLibrarian);
 				session.setAttribute("isLoggedIn", true);
 				

@@ -174,6 +174,12 @@ public class BookServlet extends HttpServlet {
 				goToAccountForm(request, response);
 		
 				break;
+			case "/createLibrarian":
+				
+				// Has to be accessible from logged out to create new account
+				createAccountForm(request, response);
+		
+				break;
 			case "/signup":
 				// Has to be accessible from logged out to create new account
 				// add new patron
@@ -497,9 +503,16 @@ public class BookServlet extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		// re-direct to the book form
+		
 		forwardDispatcher(request, response, "account-form.jsp");
 	}
+	
+	private void createAccountForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		forwardDispatcher(request, response, "account-form.jsp");
+		
+	}
+		
 
 	private void updateUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int id = Integer.parseInt(request.getParameter("id"));
@@ -528,14 +541,16 @@ public class BookServlet extends HttpServlet {
 		if(willBeLibrarian) {
 			Librarian librarian = new Librarian(0, username, password);
 			librarianDao.addLibrarian(librarian);
+			
+			response.sendRedirect("dashboard");
 		} else {
 			String first_name = request.getParameter("first_name");
 			String last_name = request.getParameter("last_name");
 			Patron patron = new Patron(0, first_name, last_name, username, password, true);
 			patronDao.addPatron(patron);
+			
+			response.sendRedirect("/LibraryProject/");
 		}
-		
-		response.sendRedirect("/LibraryProject/");
 	}
 	
 	private void logOut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

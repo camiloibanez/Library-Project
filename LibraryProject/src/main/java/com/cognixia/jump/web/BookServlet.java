@@ -175,13 +175,10 @@ public class BookServlet extends HttpServlet {
 		
 				break;
 			case "/signup":
-				try {
-					if((boolean) session.getAttribute("isLoggedIn")) {
-						// add new patron
-					}
-				} catch(Exception e) {
-					out.print(loggedOutRedirect);
-				}
+				
+				// add new patron
+				addUser(request, response);
+					
 				break;
 			case "/updateuser":
 				try {
@@ -272,7 +269,7 @@ public class BookServlet extends HttpServlet {
 
 			} else {
 				System.out.println("Incorrect username and password");
-				response.sendRedirect("/");
+				response.sendRedirect("/LibraryProject/");
 			}
 			
 		} else {
@@ -299,7 +296,7 @@ public class BookServlet extends HttpServlet {
 			
 			} else {
 				System.out.println("Incorrect username and password");
-				response.sendRedirect("/");
+				response.sendRedirect("/LibraryProject/");
 			}
 			
 		 }
@@ -494,6 +491,24 @@ public class BookServlet extends HttpServlet {
 		}
 		
 		response.sendRedirect("dashboard");
+	}
+	
+	private void addUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String username = request.getParameter("username");
+		String password = request.getParameter("pw");
+		boolean willBeLibrarian = Boolean.parseBoolean(request.getParameter("willBeLibrarian"));
+		
+		if(willBeLibrarian) {
+			Librarian librarian = new Librarian(0, username, password);
+			librarianDao.addLibrarian(librarian);
+		} else {
+			String first_name = request.getParameter("first_name");
+			String last_name = request.getParameter("last_name");
+			Patron patron = new Patron(0, first_name, last_name, username, password, true);
+			patronDao.addPatron(patron);
+		}
+		
+		response.sendRedirect("/LibraryProject/");
 	}
 	
 	private void logOut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

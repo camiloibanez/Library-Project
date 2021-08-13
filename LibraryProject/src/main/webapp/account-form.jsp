@@ -53,6 +53,21 @@
 			
 			<input type="hidden" name="account_frozen" value="<c:out value='${ user.account_frozen }' />">
 		</c:if>
+		
+		<c:if test="${ !isLoggedIn }">
+			<div class="form-check">
+			  <input class="form-check-input" type="radio" name="willBeLibrarian" id="patron" value="false" required>
+			  <label class="form-check-label" for="patron">
+			    Patron
+			  </label>
+			</div>
+			<div class="form-check">
+			  <input class="form-check-input" type="radio" name="willBeLibrarian" id="librarian" value="true">
+			  <label class="form-check-label" for="librarian">
+			    Librarian
+			  </label>
+			</div>
+		</c:if>
 			  
 	  	<button type="submit" 
 	  		  class="btn btn-primary"

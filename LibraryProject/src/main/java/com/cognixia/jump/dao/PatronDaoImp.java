@@ -15,7 +15,7 @@ public class PatronDaoImp implements PatronDao{
 	public static final Connection conn = ConnectionManager.getConnection();	
 	private static String SELECT_PATRON_BY_ID = "select * from patron where patron_id = ?";
 	private static String SELECT_PATRON_BY_CREDENTIALS = "select * from patron where username = ? and password = ?";
-	private static String INSERT_PATRON = "insert into patron(first_name, last_name, username, password, account_frozon) values(?, ?, ?, ?, ?)";
+	private static String INSERT_PATRON = "insert into patron(first_name, last_name, username, password, account_frozen) values(?, ?, ?, ?, true)";
 	private static String UPDATE_PATRON = "update patron set first_name = ?, last_name = ?, username = ?, password = ? where patron_id = ?";
 	private static String LIST_PATRONS = "select * from patron";
 	private static String UNFREEZE_PATRON = "update patron set account_frozen = false where patron_id = ?";
@@ -83,7 +83,6 @@ public class PatronDaoImp implements PatronDao{
 			pstmt.setString(2, patron.getLast_name());
 			pstmt.setString(3, patron.getUsername());
 			pstmt.setString(4, patron.getPassword());
-			pstmt.setBoolean(5, patron.isAccount_frozen());
 
 			
 			// at least one row added

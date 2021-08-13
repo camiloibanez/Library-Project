@@ -36,7 +36,7 @@
 			  <div class="form-group">
 			    
 			    <label for="isbn" class="form-label">ISBN number</label>
-			    <input type="number" class="form-control" id="isbn" name="isbn" required>
+			    <input type="text" pattern="^[1-9][0-9]{9}$" title="ten digit isbn number" class="form-control" id="isbn" name="isbn" required>
 			    
 			  </div>
 	

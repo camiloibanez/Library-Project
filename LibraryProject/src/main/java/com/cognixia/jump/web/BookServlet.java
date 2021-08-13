@@ -345,16 +345,25 @@ public class BookServlet extends HttpServlet {
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
 		int id = (int)session.getAttribute("patron_id");
 		
+		PrintWriter out = response.getWriter();
+		String youRentedABook = "<script type=\"text/javascript\">" +
+				"alert('You rented a book!');" + 
+				"location='booklist';" +
+				"</script>";
+		String errorRentingABook = "<script type=\"text/javascript\">" +
+				"alert('Oh No! Something went wrong. We were unable to rent you the book at this time.');" + 
+				"location='booklist';" +
+				"</script>";
+		
 		// updated it in the db so that it's rented
 		if (bookDao.rentBook(isbn, id)) {
 			// success message
+			out.print(youRentedABook);
 		}
 		else {
 			// error message
+			out.print(errorRentingABook);
 		}
-		
-		// refresh the page/list
-		response.sendRedirect("booklist");
 	}
 	
 
@@ -364,12 +373,24 @@ public class BookServlet extends HttpServlet {
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
 		int id =Integer.parseInt(request.getParameter("checkout_id"));
 		
+//		PrintWriter out = response.getWriter();
+//		String returnABook = "<script type=\"text/javascript\">" +
+//				"alert('You're book has been safely returned');" + 
+//				"location='history';" +
+//				"</script>";
+//		String errorReturningABook = "<script type=\"text/javascript\">" +
+//				"alert('Oh no! You were unable to return that book at this time.');" + 
+//				"location='history';" +
+//				"</script>";
+		
 		// update book so that it has been returned
 		if (bookDao.returnBook(isbn, id)) {
 			// success message
+//			out.print(returnABook);
 		}
 		else {
 			// error message
+//			out.print(errorReturningABook);
 		}
 		
 		// refresh page

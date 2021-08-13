@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -379,18 +380,36 @@ public class BookServlet extends HttpServlet {
 		int isbn = Integer.parseInt(request.getParameter("isbn"));
 		int id =Integer.parseInt(request.getParameter("checkout_id"));
 		
+		PrintWriter out = response.getWriter();
+		String returnABook = "<script type=\"text/javascript\">" +
+				"alert('Your book has been safely returned');" + 
+				"location='history';" +
+				"</script>";
+		String errorReturningABook = "<script type=\"text/javascript\">" +
+				"alert('Oh no! You were unable to return that book at this time.');" + 
+				"location='history';" +
+				"</script>";
+		
 		// update book so that it has been returned
 		if (bookDao.returnBook(isbn, id)) {
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			// success message
-			
+			out.print(returnABook);
 		}
 		else {
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			// error message
-			
+			out.print(errorReturningABook );
 		}
 		
-		// refresh page
-		response.sendRedirect("history");
 	}
 	
 	private void goToNewBookForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

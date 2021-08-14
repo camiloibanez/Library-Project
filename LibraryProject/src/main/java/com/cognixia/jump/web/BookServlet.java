@@ -64,10 +64,8 @@ public class BookServlet extends HttpServlet {
 		// get the ending url to determine what action to perform
 		String action = request.getServletPath();
 		PrintWriter out = response.getWriter();
-		String loggedOutRedirect = "<script type=\"text/javascript\">" +
-				"alert('You are not logged in');" + 
-				"location='index.jsp';" +
-				"</script>";
+
+		String loggedOutRedirect = alertMessage("You are not logged in", "index.jsp");
 		
 		// switch case to handle actions
 		switch(action) {
@@ -256,10 +254,8 @@ public class BookServlet extends HttpServlet {
 		isLibrarian = Boolean.parseBoolean(request.getParameter("isLibrarian"));
 		
 		PrintWriter out = response.getWriter();
-		String incorrectCredentialsRedirect = "<script type=\"text/javascript\">" +
-				"alert('Incorrect username and password');" + 
-				"location='index.jsp';" +
-				"</script>";
+
+		String incorrectCredentialsRedirect = alertMessage("Incorrect username and password","index.jsp");
 		
 		// check if credentials were valid
 		if (isLibrarian) {
@@ -353,14 +349,9 @@ public class BookServlet extends HttpServlet {
 		int id = (int)session.getAttribute("patron_id");
 		
 		PrintWriter out = response.getWriter();
-		String youRentedABook = "<script type=\"text/javascript\">" +
-				"alert('You rented a book!');" + 
-				"location='booklist';" +
-				"</script>";
-		String errorRentingABook = "<script type=\"text/javascript\">" +
-				"alert('Oh No! Something went wrong. We were unable to rent you the book at this time.');" + 
-				"location='booklist';" +
-				"</script>";
+		
+		String youRentedABook = alertMessage("You rented a book!", "booklist");
+		String errorRentingABook = alertMessage("Oh No! Something went wrong. We were unable to rent you the book at this time.", "booklist");
 		
 		// updated it in the db so that it's rented
 		if (bookDao.rentBook(isbn, id)) {
@@ -381,14 +372,9 @@ public class BookServlet extends HttpServlet {
 		int id =Integer.parseInt(request.getParameter("checkout_id"));
 		
 		PrintWriter out = response.getWriter();
-		String returnABook = "<script type=\"text/javascript\">" +
-				"alert('Your book has been safely returned');" + 
-				"location='history';" +
-				"</script>";
-		String errorReturningABook = "<script type=\"text/javascript\">" +
-				"alert('Oh no! You were unable to return that book at this time.');" + 
-				"location='history';" +
-				"</script>";
+		
+		String returnABook = alertMessage("Your book has been safely returned", "history");
+		String errorReturningABook = alertMessage("Oh no! You were unable to return that book at this time.", "history");
 		
 		// update book so that it has been returned
 		if (bookDao.returnBook(isbn, id)) {
@@ -568,6 +554,14 @@ public class BookServlet extends HttpServlet {
 
 		response.sendRedirect("/LibraryProject/");
 
+	}
+	
+	private String alertMessage(String message, String redirect) {
+		String result = "<script type=\"text/javascript\">" +
+				"alert('" + message + "');" + 
+				"location='" + redirect + "';" +
+				"</script>";
+		return result;
 	}
 	
 	// helper function

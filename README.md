@@ -26,3 +26,11 @@ Users are defined as either a librarian or patron
 - Add new books to the library
 - Edit the title and description of a book currently in the library
 - Freeze/un-freeze patron accounts
+
+
+## To Run
+Start MySQL server with Microsoft Services
+Run Library_Database.sql to initialize database
+Start Apache Tomcat
+RC Project -> run as -> run on server
+Go to http://localhost:8080/LibraryProject/

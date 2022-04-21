@@ -29,8 +29,8 @@ Users are defined as either a librarian or patron
 
 
 ## To Run
-Start MySQL server with Microsoft Services
-Run Library_Database.sql to initialize database
-Start Apache Tomcat
-RC Project -> run as -> run on server
-Go to http://localhost:8080/LibraryProject/
+- Start MySQL server with Microsoft Services
+- Run Library_Database.sql to initialize database
+- Start Apache Tomcat
+- RC Project -> run as -> run on server
+- Go to http://localhost:8080/LibraryProject/
